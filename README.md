@@ -93,8 +93,8 @@ for the final version, the project will improve and implement features below.
 All the frameworks below are new to our team. They are potentially very helpful to our app.
 
 1. [WebRTC](https://webrtc.org/)
-   1. Signaling: It is used for coordinating communication and send control messages. Signaling methods and protocols are not specified by WebRTC which needs supports from Socket.IO or other [alternatives](https://github.com/muaz-khan/WebRTC-Experiment/blob/master/Signaling.md).
-   2. [STUN & TURN servers](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/): Client applications need to traverse [NAT gateways](http://en.wikipedia.org/wiki/NAT_traversal) and firewalls. WebRTC APIs use STUN servers to get the IP address of your computer, and TURN servers to function as relay servers in case peer-to-peer communication fails.
+   - Signaling: It is used for coordinating communication and send control messages. Signaling methods and protocols are not specified by WebRTC which needs supports from Socket.IO or other [alternatives](https://github.com/muaz-khan/WebRTC-Experiment/blob/master/Signaling.md).
+   - STUN & TURN servers](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/): Client applications need to traverse [NAT gateways](http://en.wikipedia.org/wiki/NAT_traversal) and firewalls. WebRTC APIs use STUN servers to get the IP address of your computer, and TURN servers to function as relay servers in case peer-to-peer communication fails.
    3. Security: Encryption is mandatory for all WebRTC components, and its JavaScript APIs can only be used from secure origins (HTTPS or localhost). Developers are responsible to use secure protocols for signaling.
    4. Resources
       1. [codelabs](https://codelabs.developers.google.com/codelabs/webrtc-web/#0)
@@ -106,12 +106,12 @@ All the frameworks below are new to our team. They are potentially very helpful 
    7. [TogetherJS](https://togetherjs.com/): A free, open source JavaScript library by Mozilla that adds collaboration features and tools to website.
       1. [Sample app: Drawing](https://togetherjs.com/examples/drawing/)
 2. [webSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API): WebSockets are an advanced technology that makes it possible to open an interactive communication session between the user's browser and a server. With this API, you can send messages to a server and receive event-driven responses without having to poll the server for a reply.
-   1. [Socket.IO](https://socket.io/)
+   - [Socket.IO](https://socket.io/)
 3. [Snap.svg](http://snapsvg.io/): SVG is an excellent way to create interactive, resolution-independent vector graphics that will look great on any size screen.
-   1. [Example](http://snapsvg.io/start/)
-   2. [Docs](http://snapsvg.io/docs/)
+   - [Example](http://snapsvg.io/start/)
+   - [Docs](http://snapsvg.io/docs/)
 4. Frontend
-   1. [AngularJS](https://angularjs.org/)
-   2. [Bootstrap](http://getbootstrap.com/)
+   - [AngularJS](https://angularjs.org/)
+   - [Bootstrap](http://getbootstrap.com/)
 5. Browser / Mobile support
-   1. [Foundation](https://foundation.zurb.com/): A frontend framework supports any kind of device, any size screen, with any resolution.
+   - [Foundation](https://foundation.zurb.com/): A frontend framework supports any kind of device, any size screen, with any resolution.
