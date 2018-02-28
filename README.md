@@ -95,16 +95,16 @@ All the frameworks below are new to our team. They are potentially very helpful 
 1. [WebRTC](https://webrtc.org/)
    - Signaling: It is used for coordinating communication and send control messages. Signaling methods and protocols are not specified by WebRTC which needs supports from Socket.IO or other [alternatives](https://github.com/muaz-khan/WebRTC-Experiment/blob/master/Signaling.md).
    - STUN & TURN servers](https://www.html5rocks.com/en/tutorials/webrtc/infrastructure/): Client applications need to traverse [NAT gateways](http://en.wikipedia.org/wiki/NAT_traversal) and firewalls. WebRTC APIs use STUN servers to get the IP address of your computer, and TURN servers to function as relay servers in case peer-to-peer communication fails.
-   3. Security: Encryption is mandatory for all WebRTC components, and its JavaScript APIs can only be used from secure origins (HTTPS or localhost). Developers are responsible to use secure protocols for signaling.
-   4. Resources
-      1. [codelabs](https://codelabs.developers.google.com/codelabs/webrtc-web/#0)
-      2. [More Resources](https://webrtc.org/start/)
-   5. [PeerJS](http://peerjs.com/): It wraps the browser's WebRTC implementation to provide a complete, configurable, and easy-to-use peer-to-peer connection API. Equipped with nothing but an ID, a peer can create a P2P data or media stream connection to a remote peer.
-      1. [Getting Started](http://peerjs.com/docs/#start)
-      2. [Examples](http://peerjs.com/examples)
-   6. [DataChannelJS](https://github.com/muaz-khan/WebRTC-Experiment/tree/master/DataChannel): A JavaScript library useful to write many-to-many i.e. group file/data sharing or text chat applications.
-   7. [TogetherJS](https://togetherjs.com/): A free, open source JavaScript library by Mozilla that adds collaboration features and tools to website.
-      1. [Sample app: Drawing](https://togetherjs.com/examples/drawing/)
+   - Security: Encryption is mandatory for all WebRTC components, and its JavaScript APIs can only be used from secure origins (HTTPS or localhost). Developers are responsible to use secure protocols for signaling.
+   - Resources
+     1. [codelabs](https://codelabs.developers.google.com/codelabs/webrtc-web/#0)
+     2. [More Resources](https://webrtc.org/start/)
+   - [PeerJS](http://peerjs.com/): It wraps the browser's WebRTC implementation to provide a complete, configurable, and easy-to-use peer-to-peer connection API. Equipped with nothing but an ID, a peer can create a P2P data or media stream connection to a remote peer.
+     1. [Getting Started](http://peerjs.com/docs/#start)
+     2. [Examples](http://peerjs.com/examples)
+   - [DataChannelJS](https://github.com/muaz-khan/WebRTC-Experiment/tree/master/DataChannel): A JavaScript library useful to write many-to-many i.e. group file/data sharing or text chat applications.
+   - [TogetherJS](https://togetherjs.com/): A free, open source JavaScript library by Mozilla that adds collaboration features and tools to website.
+     1. [Sample app: Drawing](https://togetherjs.com/examples/drawing/)
 2. [webSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API): WebSockets are an advanced technology that makes it possible to open an interactive communication session between the user's browser and a server. With this API, you can send messages to a server and receive event-driven responses without having to poll the server for a reply.
    - [Socket.IO](https://socket.io/)
 3. [Snap.svg](http://snapsvg.io/): SVG is an excellent way to create interactive, resolution-independent vector graphics that will look great on any size screen.
