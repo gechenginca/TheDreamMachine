@@ -40,7 +40,24 @@ var api = (function() {
             - (String) currentCourses
             - (String) finishedCourses
             - (String) school
+
+        user object:
+            - (String) _id
+            - (String) course
+            - (String) location
+            - (String) type
+            - (String) priOrPub
+            - (String) description
+            - (String) members
+            - (String) meetingTimes
+            - (String) meetingTopics
     ****************************** */
+
+    module.getCurrentUser = function(){
+        var username = document.cookie.split("username=")[1];
+        if (username.length == 0) return null;
+        return username;
+    };
 
     // userProfile is a json object includes username, password, yearOfStudy, program, currentCourses, finishedCourses, school
     module.signup = function(userProfile, callback) {
@@ -64,53 +81,27 @@ var api = (function() {
         send("PATCH", "/api/users/" + username + "/", updates, callback);
     };
 
-
-
-    module.getCurrentUser = function(callback) {
-        send("GET", "/currentUser/", null, callback);
+    // tableProfile contains studyTableName, course, location, type, priOrPub, description, members, meetingTimes, meetingTopics
+    module.addStudyTable = function(tableProfile, callback) {
+        send("POST", "/api/studyTables/", tableProfile, callback);
     };
 
-    // add an image to the gallery
-    module.addImage = function(title, file, callback) {
-        sendFiles("POST", "/api/images/", { title: title, picture: file }, callback);
+    module.getStudyTables = function(callback) {
+        send("GET", "/api/studyTables/", null, callback);
     };
 
-    // delete an image from the gallery given its imageId
-    module.deleteImage = function(imageId, callback) {
-        send("DELETE", "/api/images/" + imageId + "/", null, callback);
+    module.getStudyTable = function(studyTableName, callback) {
+        send("GET", "/api/studyTables/" + studyTableName + "/", null, callback);
     };
 
-    // get an image from the gallery given its imageId
-    module.getImage = function(imageId, callback) {
-        send("GET", "/api/images/" + imageId + "/", null, callback);
+    // updates is a json object contains course, location, type, priOrPub, description, members, meetingTimes, meetingTopics
+    module.updateStudyTable = function(studyTableName, updates, callback) {
+        send("PATCH", "/api/StudyTables/" + studyTableName + "/", updates, callback);
     };
 
-    // get all imageIds for a given username's gallery (no pagination)
-    module.getAllImageIds = function(username, callback) {
-        send("GET", "/api/users/" + username + '/', null, callback);
-    };
-
-    // add a comment to an image
-    module.addComment = function(imageId, content, callback) {
-        send("POST", "/api/comments/", { imageId: imageId, content: content }, callback);
-    };
-
-    // delete a comment to an image
+    // delete a study table
     module.deleteComment = function(commentId, callback) {
-        send("DELETE", "/api/comments/" + commentId + "/", null, callback);
-    };
-
-    // get comments (with pagination)
-    module.getComments = function(imageId, page, callback) {
-        send("GET", "/api/comments/" + imageId + "/?page=" + page, null, callback);
-    };
-
-    module.openGallery = function(username, callback) {
-        send("POST", "/openGallery/", {username: username}, callback);
-    };
-
-    module.getGalleryOwner = function(callback) {
-        send("GET", "/getGalleryOwner/", null, callback);
+        send("DELETE", "/api/StudyTables/" + studyTableName + "/", null, callback);
     };
 
     return module;

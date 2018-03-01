@@ -42,6 +42,7 @@ connection.once('open', function() {
     };
 
     let User = require('./models/userModel.js');
+    let StudyTable = require('./models/studyTableModel.js');
 
     const is_Authenticated = function(req, res, next) {
         if (!req.username) return res.status(401).end('access denied, please login');
@@ -145,6 +146,84 @@ connection.once('open', function() {
             else {
                 return res.json(user);
             }
+        });
+    });
+
+    // study table CRUD
+
+    // add a study table
+    // curl -H "Content-Type: application/json" -X POST -d '{"studyTableName":"C09","owner":"alice", "course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/
+    app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
+        const studyTableName = req.body.studyTableName;
+        StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
+            if (err) return res.status(500).end(err);
+            if (studyTable) return res.status(409).end("study table " + studyTableName + " already exists");
+            // check if owner exists
+            User.findOne({ _id: req.body.owner }, function(err, user) {
+                if (err) return res.status(500).end(err);
+                if (user == null) return res.status(404).end('user ' + req.params.owner + ' does not exist, failed to create this study table');
+                // create new study table
+                const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+                // save new study table
+                newStudyTable.save(function(err, newStudyTable) {
+                    if (err) return console.error(err);
+                    return res.json(newStudyTable);
+                });
+            });
+        });
+    });
+
+    // get all study tables
+    // curl -b cookie.txt localhost:3000/api/studyTables/
+    app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
+        const studyTables = [];
+        StudyTable.find({}).sort({ createdAt: 1 }).exec(function(err, allStudyTables) {
+            if (err) return res.status(500).end(err);
+            if (allStudyTables != null) {
+                for (let i = 0; i < allStudyTables.length; i++) {
+                    studyTables.push(allStudyTables[i]._id);
+                }
+                return res.json(studyTables);
+            }
+        });
+    });
+
+    // get a study table
+    // curl -b cookie.txt localhost:3000/api/studyTables/C09
+    app.get('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
+        StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
+            if (err) return res.status(500).end(err);
+            if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
+            return res.json(studyTable);
+        });
+    });
+
+    // update a study table
+    // curl -H "Content-Type: application/json" -X PATCH -d '{"course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday 1-3pm"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/C09
+    app.patch('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
+        StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
+            if (err) return res.status(500).end(err);
+            if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
+            if (studyTable.owner != req.username) return res.status(401).end('access denied, you are not the owner');
+            studyTable.set({course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+            studyTable.save(function(err, updatedStudyTable) {
+                if (err) return console.error(err);
+                return res.json(updatedStudyTable);
+            });
+        });
+    });
+
+    // remove a study table
+    // curl -b cookie.txt -X DELETE localhost:3000/api/studyTables/C09
+    app.delete('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
+        StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
+            if (err) return res.status(500).end(err);
+            if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
+            if (studyTable.owner != req.username) return res.status(401).end('access denied, you are not the owner');
+            studyTable.remove(function(err) {
+                if (err) return console.error(err);
+                return res.json('study table ' + studyTable._id + ' has removed');
+            });
         });
     });
 
