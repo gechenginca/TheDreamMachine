@@ -136,9 +136,10 @@ connection.once('open', function() {
     });
 
     // update an user
-    // curl -H "Content-Type: application/json" -X PATCH -d '{"username":"alice","password":"alice","yearOfStudy":"3","program":"cs","currentCourses":["cSCC09", "CSCC01"],"finishedCourses":["CSCC01", "CSCB09"],"school":"uoft"}' -c cookie.txt localhost:3000/signup/
+    // curl -H "Content-Type: application/json" -X PATCH -d '{"yearOfStudy":"3","program":"cs","currentCourses":["cSCC09", "CSCC01"],"finishedCourses":["CSCC01", "CSCB09"],"school":"uoft"}' -b cookie.txt localhost:3000/api/users/alice
     app.patch('/api/users/:username/', is_Authenticated, function(req, res, next) {
-        User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {}, function(err, user) {
+        if (req.username != req.params.username) return res.status(401).end('access denied, you are not the owner');
+        User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {new: true}, function(err, user) {
             if (err) return res.status(500).end(err);
             if (user == null) return res.status(404).end('user ' + req.params.username + ' does not exist');
             else {
