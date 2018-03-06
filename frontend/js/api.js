@@ -41,7 +41,7 @@ var api = (function() {
             - (String) finishedCourses
             - (String) school
 
-        user object:
+        table object:
             - (String) _id
             - (String) course
             - (String) location
@@ -53,6 +53,7 @@ var api = (function() {
             - (String) meetingTopics
     ****************************** */
 
+    // Get user from cookies. 
     module.getCurrentUser = function(){
         var username = document.cookie.split("username=")[1];
         if (username.length == 0) return null;
@@ -100,7 +101,7 @@ var api = (function() {
     };
 
     // delete a study table
-    module.deleteComment = function(commentId, callback) {
+    module.deleteStudyTable = function(studyTableName, callback) {
         send("DELETE", "/api/StudyTables/" + studyTableName + "/", null, callback);
     };
 
