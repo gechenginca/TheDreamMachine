@@ -1,0 +1,78 @@
+
+
+.table_app 
+{
+    display: grid;
+    
+    /*
+    grid-template-columns: 
+        [usrs] 1fr
+        [canv0] 100px 
+        [canv1] 100px
+        [canv2] 100px
+        [chat0] 1fr
+        [chat2] 1fr
+        ;
+    
+    grid-template-rows:
+        [reg] 300px
+        [overflow] 300px
+        ;
+    */
+
+    max-width: 1600px;
+    margin: auto;
+    
+    grid-template-columns: 
+        1fr
+        auto 
+        auto
+        auto
+        1fr
+        1fr
+        ;
+    
+    grid-template-rows:
+        auto
+        450px
+        ;
+
+    grid-template-areas:
+        "user canv canv canv chat chat"
+        ". user2 chat2 chat2 . ."
+        ;
+
+}
+
+#left_panel
+{
+    grid-area: user;
+}
+
+#middle_panel
+{
+    grid-area: canv;
+    
+}
+
+#right_panel
+{
+    grid-area: chat;
+}
+
+.panel
+{
+    border-style: solid;
+    border-color: red;
+    margin: 5px;
+    padding: 5px;
+}
+
+canvas 
+{
+    background: white;
+    height: 450px;
+    width: 600px;
+}
+
+
