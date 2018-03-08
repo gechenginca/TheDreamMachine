@@ -111,7 +111,7 @@ All the frameworks below are new to our team. They are potentially very helpful 
    - [Example](http://snapsvg.io/start/)
    - [Docs](http://snapsvg.io/docs/)
 4. Frontend
-   - [AngularJS](https://angularjs.org/)
+   - [Angular](https://angular.io/)
    - [Bootstrap](http://getbootstrap.com/)
 5. Browser / Mobile support
    - [Foundation](https://foundation.zurb.com/): A frontend framework supports any kind of device, any size screen, with any resolution.
