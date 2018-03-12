@@ -5,22 +5,136 @@
 <head>
     <meta charset="utf-8"/>
     <title>Study Table</title>
-
+    <link href="style/main.css" rel="stylesheet" type="text/css" />  
+    <link href="style/index.css" rel="stylesheet" type="text/css" />  
 </head>
 
 <body>
 
-    <div id="search_box"> 
+    <header>
+    <!-- 
+    If logged out will be: home, log in
+    if logged in will be: home, profile, logout
+
+    -->
+    <div id=header>
+        <a href="/" id="home">Home</a>
+        <a href="/" id="profile">Profile</a>
+        <span id=log_out>log out</span>
+    </div>
+    </header>
+
+
+    <!-- 
+    If not logged in will only show the log in and sign up div
+    -->
+    <div id=log_in class=index_section>
+        <form class=profile_form>
+            <input type="text" class="profile_user" placeholder="User Name"></input>
+            <input type="password" class="profile_pass" placeholder="Password"></input>
+            <button type="submit" class="profile_submit">Log In</button>
+        </form>
+        <div class=profile_msg></div>
+    </div>
+
+    <div id=sign_up class=index_section>
+        <form class=profile_form>
+            <input type="text" class="profile_user" placeholder="User Name"></input>
+            <input type="text" class="profile_user" placeholder="Real Name"></input>
+            <input type="password" class="profile_pass" placeholder="Password"></input>
+            <input type="password" class="profile_pass" placeholder="Retype Password"></input>
+            <!--
+            Potencial parameters:
+            program:
+            Year:
+            Courses:
+            School:
+            -->            
+            <button type="submit" class="profile_submit">Sign Up</button>
+        </form>
+        <div class=profile_msg></div>
+    </div>
+
+    <!--Show if requested -->
+    
+    <div id=profile_edit class=index_section>
+        <form class=profile_form>
+            <input type="text" class="profile_user" placeholder="Real Name"></input>
+            <input type="password" class="profile_pass" placeholder="Password"></input>
+            <input type="password" class="profile_pass" placeholder="Retype Password"></input>
+            <!--
+            Potencial parameters:
+            program:
+            Year:
+            Courses:
+            School:
+            -->            
+            <button type="submit" class="profile_submit">Apply</button>
+        </form>
+        <div class=profile_msg></div>
+    </div>
+    
+
+    <div id="search_box" class=index_section>
+        <!-- 
+        My groups, Create groups
+        -->
+        <div id=user_control>
+
+        </div>
+
+        
+        <!--
+        _________ Search
+        By radio: by course id, by group name, 
+        -->
+     
         <form class="form" id="search_form">
             <div id="search_bar">
-                <input type="text"
-    
-            </div>  
+                <button type="submit" id="search_button">Search</button>
+                <input type="text" id="search_text" placeholder="Enter query here"></input>
+            </div>
+            <div>
+                <input type="radio" id="search_by_courseId"> Course ID </input>
+                <input type="radio" id="search_by_tableName"> Table Name </input>
+            </div>
         <form>
     </div>
 
 
-    <div id="search_results">
+    <div id="search_results" class=index_section>
+
+        <!-- 
+        Sample item:
+        -->
+
+        <div class="table_item">
+            <div class=table_par>
+                <span class=table_label>Name:</span>
+                <span class=table_name>noname</span>
+            </div>
+            <div class=table_par>
+                <span class=table_label>Course:</span>
+                <span class=table_course>cscc09</span>
+            </div>
+            <div class=table_par>
+                <span class=table_label>Times meeting:</span>
+                <div class=table_time>Mon 7-9pm</div>
+                <div class=table_time>Fri 3-5pm</div>
+            </div>
+            <div class=table_par>
+                <span class=table_label>Location:</span>
+                <span class=table_loc>virtual</span>
+            </div> 
+            <div class=table_controls>
+                <!--Depending on permissions:
+                join, apply to join, edit, details, Enter (virtual)
+                -->
+                <button class="control">Join</button>
+            </div> 
+
+
+        </div>
 
 
     </div> 
