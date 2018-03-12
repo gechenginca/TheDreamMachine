@@ -33,7 +33,7 @@
         ;
     
     grid-template-rows:
-        auto
+        650px
         450px
         ;
 
@@ -65,7 +65,127 @@
     border-style: solid;
     border-color: red;
     margin: 5px;
-    padding: 5px;
+    padding: 0px;
+}
+
+.container
+{
+    border-style: solid;
+    border-color: red;
+    padding: 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    
+    overflow: auto;
+    scrollbar-base-color: gold;
+
+
+}
+
+
+#chat
+{
+    display: grid;
+    height: 100%;
+    grid-template-rows:
+        15%
+        70%
+        15%
+        ;
+}
+
+.chat_bar
+{
+    border-style: none;
+    border-color: grey;
+    padding: 0px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+
+    display: grid;
+    grid-template-columns: 
+        
+        100px
+        1fr
+    ;
+    grid-template-areas:
+        "user content"
+    ;
+
+}
+
+.chat_user_name, .chat_content
+{
+    border-style: dotted;
+    border-color: grey;
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.chat_user_name
+{
+    grid-area: user;
+    justify-self: stretch;
+    align-self: center;
+    
+}
+.chat_content
+{
+    grid-area: content;
+    justify-self: start;
+    width: 95%;
+}
+
+/*
+.chat_content
+{
+    border-style: dotted;
+    border-color: white;
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    margin-left: 5px;
+    margin-right: 5px;
+}*/
+
+#chat_submit
+{
+    border-style: dotted;
+    border-color: grey;
+    padding: 2px;
+    margin: 2px;
+    height: 50px; 
+    
+
+}
+#chat_form
+{
+    display: grid;
+    grid-template-columns: 
+        1fr
+        100px 
+    ;
+
+    grid-template-areas:
+        "textbox send_but"
+        ;
+}
+
+#chat_form_text
+{
+    resize: none;
+    grid-area: textbox;
+    width: auto;
+}
+#chat_form_button
+{
+    grid-area: send_but;
 }
 
 canvas 

@@ -17,32 +17,47 @@
     if logged in will be: home, profile, logout
 
     -->
-    <div id=header>
-        <a href="/" id="home">Home</a>
+    <div id="header">
+        <h1><a href="/" id="home">Home</a></h1>
+        <!--        
         <a href="/" id="profile">Profile</a>
         <span id=log_out>log out</span>
+        -->
     </div>
     </header>
+
+    <!-- 
+    My groups, Create groups
+    -->
+    <div id="user_control" class="index_section">
+        <h2>User Control</h2>
+        <button type="button" id="search_button">My Groups</button>
+        <button type="button" id="search_button">Create Group</button>
+        <button type="button" id="search_button">Edit Profile</button>
+        <button type="button" id="search_button">Logout</button>
+    </div>
 
 
     <!-- 
     If not logged in will only show the log in and sign up div
     -->
-    <div id=log_in class=index_section>
+    <div id="log_in" class="index_section">
+        <h2>Log In</h2>
         <form class=profile_form>
-            <input type="text" class="profile_user" placeholder="User Name"></input>
-            <input type="password" class="profile_pass" placeholder="Password"></input>
+            <input type="text" class="profile_user" placeholder="User Name" required></input>
+            <input type="password" class="profile_pass" placeholder="Password" required></input>
             <button type="submit" class="profile_submit">Log In</button>
         </form>
         <div class=profile_msg></div>
     </div>
 
-    <div id=sign_up class=index_section>
-        <form class=profile_form>
-            <input type="text" class="profile_user" placeholder="User Name"></input>
-            <input type="text" class="profile_user" placeholder="Real Name"></input>
-            <input type="password" class="profile_pass" placeholder="Password"></input>
-            <input type="password" class="profile_pass" placeholder="Retype Password"></input>
+    <div id="sign_up" class="index_section">
+        <h2>Sign Up</h2>
+        <form class="profile_form">
+            <input type="text" class="profile_user" placeholder="User Name" required></input>
+            <input type="text" class="profile_user" placeholder="Real Name" required></input>
+            <input type="password" class="profile_pass" placeholder="Password" required></input>
+            <input type="password" class="profile_pass" placeholder="Retype Password" required></input>
             <!--
             Potencial parameters:
             program:
@@ -52,12 +67,13 @@
             -->            
             <button type="submit" class="profile_submit">Sign Up</button>
         </form>
-        <div class=profile_msg></div>
+        <div class="profile_msg"></div>
     </div>
 
     <!--Show if requested -->
     
-    <div id=profile_edit class=index_section>
+    <div id="profile_edit" class="index_section">
+        <h2>Edit Profile</h2>
         <form class=profile_form>
             <input type="text" class="profile_user" placeholder="Real Name"></input>
             <input type="password" class="profile_pass" placeholder="Password"></input>
@@ -73,15 +89,34 @@
         </form>
         <div class=profile_msg></div>
     </div>
-    
+
+
+    <div id="group_add" class="index_section">
+        <h2>Create Study Group</h2>
+        <form class=profile_form>
+            <input type="text" class="group_name" placeholder="Group Name" required></input>
+            <input type="text" class="group_course" placeholder="Course" required></input>
+            <input type="password" class="group_pass" placeholder="Password"></input>
+            <input type="password" class="group_pass" placeholder="Retype Password"></input>
+
+            <!--
+            <div>
+                <input type="radio" id="group_typeA"> Virtual </input>
+                <input type="radio" id="group_typeB"> In Person </input>
+            </div>
+            -->
+            <!--
+            Potencial parameters:
+            Meet up times
+            -->            
+            <button type="submit" class="profile_submit">Create Group</button>
+        </form>
+        <div class=profile_msg></div>
+    </div>
 
     <div id="search_box" class=index_section>
-        <!-- 
-        My groups, Create groups
-        -->
-        <div id=user_control>
-
-        </div>
+        <h2>Search Study Groups</h2>
+        
 
         
         <!--
@@ -102,35 +137,36 @@
     </div>
 
 
-    <div id="search_results" class=index_section>
-
+    <div id="search_results" class="index_section">
+        <h2>Study Groups</h2>
         <!-- 
         Sample item:
         -->
 
-        <div class="table_item">
-            <div class=table_par>
-                <span class=table_label>Name:</span>
-                <span class=table_name>noname</span>
+        <div class="table_item index_section">
+            <div class="table_par">
+                <span class="table_label">Name:</span>
+                <span class="table_name">noname</span>
             </div>
-            <div class=table_par>
-                <span class=table_label>Course:</span>
-                <span class=table_course>cscc09</span>
+            <div class="table_par">
+                <span class="table_label">Course:</span>
+                <span class="table_course">cscc09</span>
             </div>
-            <div class=table_par>
-                <span class=table_label>Times meeting:</span>
-                <div class=table_time>Mon 7-9pm</div>
-                <div class=table_time>Fri 3-5pm</div>
+            <div class="table_par">
+                <span class="table_label">Times meeting:</span>
+                <div class="table_time">Mon 7-9pm</div>
+                <div class="table_time">Fri 3-5pm</div>
             </div>
-            <div class=table_par>
-                <span class=table_label>Location:</span>
-                <span class=table_loc>virtual</span>
+            <div class="table_par">
+                <span class="table_label">Location:</span>
+                <span class="table_loc">virtual</span>
             </div> 
-            <div class=table_controls>
+            <div class="table_controls">
                 <!--Depending on permissions:
                 join, apply to join, edit, details, Enter (virtual)
                 -->
-                <button class="control">Join</button>
+                <button class="control">Enter</button>
+                <button class="control">Edit</button>
             </div> 
 
 
