@@ -229,10 +229,24 @@ connection.once('open', function() {
 
 });
 
-const http = require('http');
+const server = require('http').createServer(app);
 const PORT = 3000;
+const socketIo = require('socket.io');
+let line_history = [];
 
-http.createServer(app).listen(PORT, function(err) {
+const io = socketIo.listen(server);
+server.listen(PORT, function(err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
+});
+
+io.on('connection', function(socket) {
+    for (let i in line_history) {
+        socket.emit('draw_line', { line: line_history[i] });
+    }
+
+    socket.on('draw_line', function(data) {
+        line_history.push(data.line);
+        io.emit('draw_line', { line: data.line });
+    });
 });
