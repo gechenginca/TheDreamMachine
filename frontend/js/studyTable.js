@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
          mouse.color = '#FB0106FF';
       });
       elem.querySelector('.yellow').addEventListener('click', function() {
-         mouse.color = '##FEFE0AFF';
+         mouse.color = '#FEFE0AFF';
       });
       elem.querySelector('.blue').addEventListener('click', function() {
          mouse.color = '#0000FEFF';
