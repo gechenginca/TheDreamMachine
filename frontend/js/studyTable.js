@@ -77,15 +77,12 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="blue">blue</button>
       `;
       elem.querySelector('.red').addEventListener('click', function() {
-         context.strokeStyle = '#FB0106FF';
          mouse.color = '#FB0106FF';
       });
       elem.querySelector('.yellow').addEventListener('click', function() {
-         context.strokeStyle = '#FEFE0AFF';
          mouse.color = '##FEFE0AFF';
       });
       elem.querySelector('.blue').addEventListener('click', function() {
-         context.strokeStyle = '#0000FEFF';
          mouse.color = '#0000FEFF';
       });
       document.getElementById("mid_canvas").append(elem);
@@ -99,15 +96,12 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="large">large</button>
       `;
       elem.querySelector('.small').addEventListener('click', function() {
-         context.lineWidth = 1;
          mouse.lineWidth = 1;
       });
       elem.querySelector('.medium').addEventListener('click', function() {
-         context.lineWidth = 5;
          mouse.lineWidth = 5;
       });
       elem.querySelector('.large').addEventListener('click', function() {
-         context.lineWidth = 10;
          mouse.lineWidth = 10;
       });
       document.getElementById("mid_canvas").append(elem);
@@ -119,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function() {
       <button class="eraser">eraser</button>
       `;
       elem.querySelector('.eraser').addEventListener('click', function() {
-         context.strokeStyle = 'white';
          mouse.color = 'white';
       });
       document.getElementById("mid_canvas").append(elem);
