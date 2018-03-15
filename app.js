@@ -231,7 +231,7 @@ app.use(express.static('frontend'));
 // });
 
 const server = require('http').createServer(app);
-const PORT = 3000;
+let PORT = process.env.PORT || 3000;
 const socketIo = require('socket.io');
 let line_history = [];
 
