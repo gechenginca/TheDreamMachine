@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
    canvas.onmousemove = function(e) {
       // normalize mouse position to range 0.0 - 1.0
+      console.log(canvas.width, canvas.height, e.clientX - this.offsetLeft, e.clientY - this.offsetTop);
       mouse.pos.x = e.clientX / width;
       mouse.pos.y = e.clientY / height;
       mouse.move = true;
@@ -48,5 +49,17 @@ document.addEventListener("DOMContentLoaded", function() {
       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
       setTimeout(mainLoop, 25);
    }
+
+   function clearCanvas() {
+      var elem = document.createElement('div');
+      elem.innerHTML = `
+      <button class="clear">Clear</button>
+      `;
+      elem.querySelector('.clear').addEventListener('click', function() {
+         context.clearRect(0, 0, canvas.width, canvas.height);
+      });
+      document.getElementById("mid_canvas").append(elem);
+   }
    mainLoop();
+   clearCanvas();
 });
