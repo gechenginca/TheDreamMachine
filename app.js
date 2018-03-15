@@ -14,12 +14,19 @@ app.use(bodyParser.json());
 app.use(session({
     secret: crypto.randomBytes(64).toString('base64'),
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { httpOnly: true, secure: true, sameSite: true }
 }));
 
 app.use(function(req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
-    console.log("HTTP request", req.username, req.method, req.url, req.body);
+    res.setHeader('Set-Cookie', cookie.serialize('username', req.username, {
+          path : '/',
+          maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+          httpOnly: false,
+          secure: true,
+          sameSite: true
+    }));
     next();
 });
 
