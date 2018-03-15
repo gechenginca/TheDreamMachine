@@ -25,10 +25,10 @@ app.use(function(req, res, next) {
 
 app.use(express.static('frontend'));
 
-let db = mongoose.connect('mongodb://localhost/user');
-let connection = mongoose.connection;
-connection.on('error', console.error.bind(console, 'connection error:'));
-connection.once('open', function() {
+//let db = mongoose.connect('mongodb://localhost/user');
+//let connection = mongoose.connection;
+//connection.on('error', console.error.bind(console, 'connection error:'));
+//connection.once('open', function() {
     console.log('Successfully connected to database');
 
     const generateSalt = function() {
@@ -227,7 +227,7 @@ connection.once('open', function() {
         });
     });
 
-});
+//});
 
 const server = require('http').createServer(app);
 const PORT = 3000;

@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
    };
 
    // draw line received from server
-    socket.on('draw_line', function (data) {
+   socket.on('draw_line', function (data) {
       var line = data.line;
       context.beginPath();
       var temp_x0 = (line[0].x * width);
