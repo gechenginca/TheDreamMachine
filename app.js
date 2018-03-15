@@ -27,9 +27,10 @@ app.use(express.static('frontend'));
 
 // let db = mongoose.connect('mongodb://localhost/user');
 // let db = mongoose.connect('mongodb+srv://c09project:tdm0322@cluster0-obj3a.mongodb.net/test');
-// let connection = mongoose.connection;
-// connection.on('error', console.error.bind(console, 'connection error:'));
-// connection.once('open', function() {
+let db = mongoose.connect('mongodb://admin:thedreammachine@ds115569.mlab.com:15569/studytable')
+let connection = mongoose.connection;
+connection.on('error', console.error.bind(console, 'connection error:'));
+connection.once('open', function() {
     console.log('Successfully connected to database');
 
     const generateSalt = function() {
@@ -228,7 +229,7 @@ app.use(express.static('frontend'));
         });
     });
 
-// });
+});
 
 const server = require('http').createServer(app);
 let PORT = process.env.PORT || 3000;
