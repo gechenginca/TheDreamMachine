@@ -3,7 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
       click: false,
       move: false,
       pos: {x:0, y:0},
-      pos_prev: false
+      pos_prev: false,
+      color: 'black',
+      lineWidth: 1
    };
    // get canvas element and create context
    var canvas  = document.getElementById('canvas');
@@ -34,15 +36,21 @@ document.addEventListener("DOMContentLoaded", function() {
       context.beginPath();
       context.moveTo(line[0].x * width, line[0].y * height);
       context.lineTo(line[1].x * width, line[1].y * height);
+      context.strokeStyle = line[2];
+      context.lineWidth = line[3];
       context.stroke();
    });
-   
+
+   socket.on('clear', function(data) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+   });
+
    // main loop, running every 25ms
    function mainLoop() {
       // check if the user is drawing
       if (mouse.click && mouse.move && mouse.pos_prev) {
          // send line to to the server
-         socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev ] });
+         socket.emit('draw_line', { line: [ mouse.pos, mouse.pos_prev, mouse.color, mouse.lineWidth ]});
          mouse.move = false;
       }
       mouse.pos_prev = {x: mouse.pos.x, y: mouse.pos.y};
@@ -56,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
       `;
       elem.querySelector('.clear').addEventListener('click', function() {
          context.clearRect(0, 0, canvas.width, canvas.height);
+         socket.emit('clear', {});
       });
       document.getElementById("mid_canvas").append(elem);
    }
@@ -69,12 +78,15 @@ document.addEventListener("DOMContentLoaded", function() {
       `;
       elem.querySelector('.red').addEventListener('click', function() {
          context.strokeStyle = '#FB0106FF';
+         mouse.color = '#FB0106FF';
       });
       elem.querySelector('.yellow').addEventListener('click', function() {
          context.strokeStyle = '#FEFE0AFF';
+         mouse.color = '##FEFE0AFF';
       });
       elem.querySelector('.blue').addEventListener('click', function() {
          context.strokeStyle = '#0000FEFF';
+         mouse.color = '#0000FEFF';
       });
       document.getElementById("mid_canvas").append(elem);
    }
@@ -88,12 +100,15 @@ document.addEventListener("DOMContentLoaded", function() {
       `;
       elem.querySelector('.small').addEventListener('click', function() {
          context.lineWidth = 1;
+         mouse.lineWidth = 1;
       });
       elem.querySelector('.medium').addEventListener('click', function() {
          context.lineWidth = 5;
+         mouse.lineWidth = 5;
       });
       elem.querySelector('.large').addEventListener('click', function() {
          context.lineWidth = 10;
+         mouse.lineWidth = 10;
       });
       document.getElementById("mid_canvas").append(elem);
    }
@@ -105,6 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
       `;
       elem.querySelector('.eraser').addEventListener('click', function() {
          context.strokeStyle = 'white';
+         mouse.color = 'white';
       });
       document.getElementById("mid_canvas").append(elem);
    }
