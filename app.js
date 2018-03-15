@@ -20,7 +20,7 @@ app.use(session({
 
 app.use(function(req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
-    res.setHeader('Set-Cookie', cookie.serialize('username', username, {
+    res.setHeader('Set-Cookie', cookie.serialize('username', req.username, {
           path : '/',
           maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
           httpOnly: false,
