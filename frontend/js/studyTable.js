@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
    canvas.onmousemove = function(e) {
       // normalize mouse position to range 0.0 - 1.0
-      console.log(canvas.width, canvas.height, e.clientX - this.offsetLeft, e.clientY - this.offsetTop);
       mouse.pos.x = e.clientX / width;
       mouse.pos.y = e.clientY / height;
       mouse.move = true;
@@ -60,6 +59,59 @@ document.addEventListener("DOMContentLoaded", function() {
       });
       document.getElementById("mid_canvas").append(elem);
    }
+
+   function colors() {
+      var elem = document.createElement('div');
+      elem.innerHTML = `
+      <button class="red">red</button>
+      <button class="yellow">yellow</button>
+      <button class="blue">blue</button>
+      `;
+      elem.querySelector('.red').addEventListener('click', function() {
+         context.strokeStyle = '#FB0106FF';
+      });
+      elem.querySelector('.yellow').addEventListener('click', function() {
+         context.strokeStyle = '#FEFE0AFF';
+      });
+      elem.querySelector('.blue').addEventListener('click', function() {
+         context.strokeStyle = '#0000FEFF';
+      });
+      document.getElementById("mid_canvas").append(elem);
+   }
+
+   function size() {
+      var elem = document.createElement('div');
+      elem.innerHTML = `
+      <button class="small">small</button>
+      <button class="medium">medium</button>
+      <button class="large">large</button>
+      `;
+      elem.querySelector('.small').addEventListener('click', function() {
+         context.lineWidth = 1;
+      });
+      elem.querySelector('.medium').addEventListener('click', function() {
+         context.lineWidth = 5;
+      });
+      elem.querySelector('.large').addEventListener('click', function() {
+         context.lineWidth = 10;
+      });
+      document.getElementById("mid_canvas").append(elem);
+   }
+
+   function eraser() {
+      var elem = document.createElement('div');
+      elem.innerHTML = `
+      <button class="eraser">eraser</button>
+      `;
+      elem.querySelector('.eraser').addEventListener('click', function() {
+         context.strokeStyle = 'white';
+      });
+      document.getElementById("mid_canvas").append(elem);
+   }
+
    mainLoop();
    clearCanvas();
+   colors();
+   size();
+   eraser();
 });
