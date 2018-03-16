@@ -33,7 +33,7 @@ var api = (function() {
     /*  ******* Data types *******
         
         auth object:
-            - (String) _id
+            - (String) username
             - (String) password
         
         user object:
@@ -47,7 +47,7 @@ var api = (function() {
 
         table object:
             - (String) _id
-            - (String) name
+            - (String) owner
             - (String) course
             - (String) location
             - (String) isVirtual
@@ -65,19 +65,16 @@ var api = (function() {
         return username;
     };
 
-    module.signup = function(auth, userProfile, callback) {
+    module.signup = function(auth, callback) {
         send("POST", "/signup/",
-            {
-            auth: auth,   
-            profile: userProfile
-            }, 
+            auth, 
             callback);
         
     };
     
     // Sign in, sets user session
     module.signin = function(username, password, callback) {
-        send("POST", "/signin/", { _id: username, password: password }, callback);
+        send("POST", "/signin/", { username: username, password: password }, callback);
     };
     module.signin2 = function(auth, callback) {
         send("POST", "/signin/", auth, callback);
@@ -94,12 +91,14 @@ var api = (function() {
     };
 
     // updates is a json object includes yearOfStudy, program, currentCourses, finishedCourses, school
+    /* TODO
     module.updateUser = function(username, UserProfile, callback) {
         send("PATCH", "/api/users/" + username + "/", UserProfile, callback);
     };
+    */
     // Update password for user TODO should it be post?
     module.updatePass = function(username, auth, callback) {
-        send("POST", "/api/users/" + username + "/", auth, callback);
+        send("PATCH", "/api/users/" + username + "/", auth, callback);
     };
 
     // tableProfile potencially contains studyTableName, course, location, type, priOrPub, description, members, meetingTimes, meetingTopics

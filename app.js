@@ -50,6 +50,7 @@ connection.once('open', function() {
         return hash.digest('base64');
     };
 
+    //Databases:
     let User = require('./models/userModel.js');
     let StudyTable = require('./models/studyTableModel.js');
 
@@ -62,15 +63,18 @@ connection.once('open', function() {
     app.post('/signup/', function(req, res, next) {
         if (!('username' in req.body)) return res.status(400).end('username is missing');
         if (!('password' in req.body)) return res.status(400).end('password is missing');
+        // TODO created a seperation in databases between user password pair and profile
+        // Need to create row in profile database in future.
         const username = req.body.username;
         const password = req.body.password;
+        const salt = generateSalt();
         User.findOne({ _id: username }, function(err, user) {
             if (err) return res.status(500).end(err);
             if (user) return res.status(409).end("username " + username + " already exists");
             const salt = generateSalt();
             const hash = generateHash(password, salt);
             // create new user
-            const newUser = new User({_id: username, hash: hash, salt: salt, yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school});
+            const newUser = new User({_id: username, hash: hash, salt: salt});
             // save new user
             newUser.save(function (err, newUser) {
                 if (err) return console.error(err);
@@ -79,6 +83,8 @@ connection.once('open', function() {
                     path: '/',
                     maxAge: 60 * 60 * 24 * 7
                 }));
+                // Set as logged in
+                req.session.username = username;
                 return res.json("user " + username + " signed up");
             });
         });
@@ -133,6 +139,7 @@ connection.once('open', function() {
         });
     });
 
+    //TODO should not be returning hash or salt, should be returning profile info ONLY!
     // get an user
     // curl -b cookie.txt localhost:3000/api/users/alice
     app.get('/api/users/:username/', is_Authenticated, function(req, res, next) {
@@ -145,15 +152,24 @@ connection.once('open', function() {
         });
     });
 
-    // update an user
+    // update an user's password
+
+    // Example for updating profile TODO
     // curl -H "Content-Type: application/json" -X PATCH -d '{"yearOfStudy":"3","program":"cs","currentCourses":["cSCC09", "CSCC01"],"finishedCourses":["CSCC01", "CSCB09"],"school":"uoft"}' -b cookie.txt localhost:3000/api/users/alice
     app.patch('/api/users/:username/', is_Authenticated, function(req, res, next) {
         if (req.username != req.params.username) return res.status(401).end('access denied, you are not the owner');
-        User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {new: true}, function(err, user) {
+        //User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {new: true}, function(err, user) {
+
+        const username = req.params.username;
+        const password = req.body.password;
+        const salt = generateSalt();
+
+        User.findOneAndUpdate({ _id: req.params.username }, {hash: hash, salt: salt}, {new: true}, function(err, user) {
             if (err) return res.status(500).end(err);
             if (user == null) return res.status(404).end('user ' + req.params.username + ' does not exist');
             else {
-                return res.json(user);
+                return res.json("user " + username + " password updated.");
+                //return res.json(user);
             }
         });
     });
