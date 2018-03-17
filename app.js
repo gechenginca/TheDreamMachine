@@ -15,18 +15,18 @@ app.use(session({
     secret: crypto.randomBytes(64).toString('base64'),
     resave: false,
     saveUninitialized: true,
-    cookie: { httpOnly: true, secure: true, sameSite: true }
+    // cookie: { httpOnly: true, secure: true, sameSite: true }
 }));
 
 app.use(function(req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
-    res.setHeader('Set-Cookie', cookie.serialize('username', req.username, {
-          path : '/',
-          maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
-          httpOnly: false,
-          secure: true,
-          sameSite: true
-    }));
+    // res.setHeader('Set-Cookie', cookie.serialize('username', req.username, {
+    //       path : '/',
+    //       maxAge: 60 * 60 * 24 * 7, // 1 week in number of seconds
+    //       httpOnly: false,
+    //       secure: true,
+    //       sameSite: true
+    // }));
     next();
 });
 
@@ -34,7 +34,7 @@ app.use(express.static('frontend'));
 
 // let db = mongoose.connect('mongodb://localhost/user');
 // let db = mongoose.connect('mongodb+srv://c09project:tdm0322@cluster0-obj3a.mongodb.net/test');
-let db = mongoose.connect('mongodb://admin:thedreammachine@ds115569.mlab.com:15569/studytable')
+let db = mongoose.connect('mongodb://admin:thedreammachine@ds115569.mlab.com:15569/studytable');
 let connection = mongoose.connection;
 connection.on('error', console.error.bind(console, 'connection error:'));
 connection.once('open', function() {
@@ -55,13 +55,7 @@ connection.once('open', function() {
     let StudyTable = require('./models/studyTableModel.js');
 
     const is_Authenticated = function(req, res, next) {
-        console.log(req.session.username);
-        if ((req.session.username == null) ||
-            (req.session.username == undefined) ||
-            (req.session.username == ''))
-        {
-            return res.status(401).end('access denied, please login');
-        }
+        if (!req.username) return res.status(401).end('access denied, please login');
         next();
     };
 
@@ -188,7 +182,7 @@ connection.once('open', function() {
     // curl -H "Content-Type: application/json" -X POST -d '{"studyTableName":"C09","owner":"alice", "course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/
     // app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
     // skip authenticated first
-    app.post('/api/studyTables/', function(req, res, next) {
+    app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
         const studyTableName = req.body.studyTableName;
         StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -212,7 +206,7 @@ connection.once('open', function() {
     // curl -b cookie.txt localhost:3000/api/studyTables/
     // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
     // skip authenticated
-    app.get('/api/studyTables/', function(req, res, next) {
+    app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
         const studyTables = [];
         StudyTable.find({}).sort({ createdAt: 1 }).exec(function(err, allStudyTables) {
             if (err) return res.status(500).end(err);
@@ -229,7 +223,7 @@ connection.once('open', function() {
     // curl -b cookie.txt localhost:3000/api/studyTables/C09
     // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
     // skip authenticated
-    app.get('/api/studyTables/:studyTableName/', function(req, res, next) {
+    app.get('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
