@@ -55,7 +55,13 @@ connection.once('open', function() {
     let StudyTable = require('./models/studyTableModel.js');
 
     const is_Authenticated = function(req, res, next) {
-        if (!req.username) return res.status(401).end('access denied, please login');
+        console.log(req.session.username);
+        if ((req.session.username == null) ||
+            (req.session.username == undefined) ||
+            (req.session.username == ''))
+        {
+            return res.status(401).end('access denied, please login');
+        }
         next();
     };
 
@@ -107,6 +113,7 @@ connection.once('open', function() {
                 maxAge: 60 * 60 * 24 * 7
             }));
             req.session.username = username;
+            console.log("Loged in as: "+req.session.username);
             return res.json("user " + username + " signed in");
         });
     });
@@ -117,9 +124,10 @@ connection.once('open', function() {
             path: '/',
             maxAge: 60 * 60 * 24 * 7
         }));
-        req.username = null;
+        req.session.username = null;
         req.session.destroy();
-        res.redirect('/');
+        //res.redirect('/');
+        return res.json("");
     });
 
     // user CRUD
@@ -156,17 +164,17 @@ connection.once('open', function() {
 
     // Example for updating profile TODO
     // curl -H "Content-Type: application/json" -X PATCH -d '{"yearOfStudy":"3","program":"cs","currentCourses":["cSCC09", "CSCC01"],"finishedCourses":["CSCC01", "CSCB09"],"school":"uoft"}' -b cookie.txt localhost:3000/api/users/alice
-    app.patch('/api/users/:username/', is_Authenticated, function(req, res, next) {
-        if (req.username != req.params.username) return res.status(401).end('access denied, you are not the owner');
+    app.patch('/signup/', is_Authenticated, function(req, res, next) {
+        if (req.session.username != req.body.username) return res.status(401).end('access denied, you are not the owner');
         //User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {new: true}, function(err, user) {
 
-        const username = req.params.username;
+        const username = req.session.username;
         const password = req.body.password;
         const salt = generateSalt();
 
-        User.findOneAndUpdate({ _id: req.params.username }, {hash: hash, salt: salt}, {new: true}, function(err, user) {
+        User.findOneAndUpdate({ _id: username }, {hash: hash, salt: salt}, {new: true}, function(err, user) {
             if (err) return res.status(500).end(err);
-            if (user == null) return res.status(404).end('user ' + req.params.username + ' does not exist');
+            if (user == null) return res.status(404).end('user ' + username + ' does not exist');
             else {
                 return res.json("user " + username + " password updated.");
                 //return res.json(user);
