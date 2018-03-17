@@ -181,7 +181,6 @@ connection.once('open', function() {
     // app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
     // skip authenticated first
     app.post('/api/studyTables/', function(req, res, next) {
-        console.log("enter add table app function");
         const studyTableName = req.body.studyTableName;
         StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -191,9 +190,7 @@ connection.once('open', function() {
                 if (err) return res.status(500).end(err);
                 // if (user == null) return res.status(404).end('user ' + req.params.owner + ' does not exist, failed to create this study table');
                 // create new study table
-                // const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
-                // beta version use the simple profile first
-                const newStudyTable = new StudyTable({_id: studyTableName, course: req.body.course});
+                const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
                 // save new study table
                 newStudyTable.save(function(err, newStudyTable) {
                     if (err) return console.error(err);
@@ -222,7 +219,9 @@ connection.once('open', function() {
 
     // get a study table
     // curl -b cookie.txt localhost:3000/api/studyTables/C09
-    app.get('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
+    // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
+    // skip authenticated
+    app.get('/api/studyTables/:studyTableName/', function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');

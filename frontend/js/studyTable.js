@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-   var mouse = { 
+   var mouse = {
       click: false,
       move: false,
       pos: {x:0, y:0},
