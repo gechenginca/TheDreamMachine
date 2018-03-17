@@ -61,6 +61,7 @@ var api = (function() {
     // Get user from cookies. 
     module.getCurrentUser = function(){
         var username = document.cookie.split("username=")[1];
+        if (username == undefined) return null;
         if (username.length == 0) return null;
         return username;
     };
@@ -80,6 +81,10 @@ var api = (function() {
         send("POST", "/signin/", auth, callback);
     };
 
+    module.signout = function(callback) {
+        send("GET", "/signout/", null, callback);
+    };
+
     // TODO do we need this?
     module.getUsernames = function(callback) {
         send("GET", "/api/users/", null, callback);
@@ -97,8 +102,8 @@ var api = (function() {
     };
     */
     // Update password for user TODO should it be post?
-    module.updatePass = function(username, auth, callback) {
-        send("PATCH", "/api/users/" + username + "/", auth, callback);
+    module.updatePass = function(auth, callback) {
+        send("PATCH", "/signup/", auth, callback);
     };
 
     // tableProfile potencially contains studyTableName, course, location, type, priOrPub, description, members, meetingTimes, meetingTopics
