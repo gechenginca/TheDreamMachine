@@ -4,12 +4,12 @@
 
     window.onload = function()
     {
-        
+
         //sign up
         var parent_div = document.getElementById('sign_up')
         var msg_div = parent_div.getElementsByClassName("profile_msg")[0];
         var form_sign_up = parent_div.getElementsByTagName("form")[0];
-        
+
         form_sign_up.addEventListener('submit', function(e)
         {
             // prevent from refreshing the page on submit
@@ -49,7 +49,7 @@
         var parent_sign_in_div = document.getElementById('log_in')
         var msg_sign_in_div = parent_sign_in_div.getElementsByClassName("profile_msg")[0];
         var form_sign_in = parent_sign_in_div.getElementsByTagName("form")[0];
-        
+
         form_sign_in.addEventListener('submit', function(e)
         {
             // prevent from refreshing the page on submit
@@ -77,6 +77,47 @@
 
         });
 
+        // create study group
+        // test to make sure the user right now
+        console.log(api.getCurrentUser());
+        var create_table_parent = document.getElementById("group_add");
+        var table_profile = create_table_parent.getElementsByClassName("profile_msg")[0];
+        var table_form = create_table_parent.getElementsByTagName("form")[0];
+        table_form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            // get the table information
+            var group_name = create_table_parent.getElementsByClassName("group_name")[0].value;
+            var group_course = create_table_parent.getElementsByClassName("group_course")[0].value;
+            // cleaning
+            table_form.reset();
+
+            // sned API
+            var tableProfile = {studyTableName: group_name, course: group_course};
+            api.addStudyTable(tableProfile, function(err, message) {
+                if (err) {
+                    table_profile.innerHTML = err;
+                } else {
+                    console.log(message);
+                }
+            });
+        });
+
+        // display all tabls
+        //var tables_display_parent = document.getElementById()
+        var tables_select_parent = document.getElementById("select_bar");
+        api.getStudyTables(function(err, tables) {
+            if (err) {
+                console.log(err);
+            } else {
+                var element = document.createElement('select');
+                element.className = "select_btn";
+                element.innerHTML += `<option value="null">--please select a study group--</option>`
+                for (var i=0; tables[i] != null; i++) {
+                    element.innerHTML += `<option value="${tables[i]}">${tables[i]}</option>`;
+                }
+                document.querySelector('#select_bar').prepend(element);
+            }
+        })
 
 
 

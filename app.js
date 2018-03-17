@@ -178,7 +178,10 @@ connection.once('open', function() {
 
     // add a study table
     // curl -H "Content-Type: application/json" -X POST -d '{"studyTableName":"C09","owner":"alice", "course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/
-    app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
+    // app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
+    // skip authenticated first
+    app.post('/api/studyTables/', function(req, res, next) {
+        console.log("enter add table app function");
         const studyTableName = req.body.studyTableName;
         StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -186,9 +189,11 @@ connection.once('open', function() {
             // check if owner exists
             User.findOne({ _id: req.body.owner }, function(err, user) {
                 if (err) return res.status(500).end(err);
-                if (user == null) return res.status(404).end('user ' + req.params.owner + ' does not exist, failed to create this study table');
+                // if (user == null) return res.status(404).end('user ' + req.params.owner + ' does not exist, failed to create this study table');
                 // create new study table
-                const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+                // const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+                // beta version use the simple profile first
+                const newStudyTable = new StudyTable({_id: studyTableName, course: req.body.course});
                 // save new study table
                 newStudyTable.save(function(err, newStudyTable) {
                     if (err) return console.error(err);
@@ -200,7 +205,9 @@ connection.once('open', function() {
 
     // get all study tables
     // curl -b cookie.txt localhost:3000/api/studyTables/
-    app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
+    // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
+    // skip authenticated
+    app.get('/api/studyTables/', function(req, res, next) {
         const studyTables = [];
         StudyTable.find({}).sort({ createdAt: 1 }).exec(function(err, allStudyTables) {
             if (err) return res.status(500).end(err);
