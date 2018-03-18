@@ -310,6 +310,7 @@ connection.once('open', function() {
         line_history = data;
     }
 
+    // TODO: fix bug that load empty line history before retrieving the real data from remote db
     io.on('connection', function(socket) {
         // Canvas.findOne({ tableId: tableId }, function(err, canvas) {
         //     if (err) return console.error(err);
