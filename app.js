@@ -180,8 +180,6 @@ connection.once('open', function() {
 
     // add a study table
     // curl -H "Content-Type: application/json" -X POST -d '{"studyTableName":"C09","owner":"alice", "course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/
-    // app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
-    // skip authenticated first
     app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
         const studyTableName = req.body.studyTableName;
         StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
@@ -221,8 +219,6 @@ connection.once('open', function() {
 
     // get a study table
     // curl -b cookie.txt localhost:3000/api/studyTables/C09
-    // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
-    // skip authenticated
     app.get('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);

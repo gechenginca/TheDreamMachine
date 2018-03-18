@@ -118,23 +118,19 @@
 
     <div id="search_box" class=index_section>
         <h2>Search Study Groups</h2>
-        
-
-        
         <!--
         _________ Search
         By radio: by course id, by group name, 
         -->
-     
         <form class="form" id="search_form">
             <div id="search_bar">
                 <button type="submit" id="search_button">Search</button>
-                <input type="text" id="search_text" placeholder="Enter query here"></input>
+                <input type="text" class="search_content" id="search_text" placeholder="Enter query here"></input>
             </div>
-            <div>
+            <!--div>
                 <input type="radio" id="search_by_courseId"> Course ID </input>
                 <input type="radio" id="search_by_tableName"> Table Name </input>
-            </div>
+            </div-->
         </form>
 
             <!-- div> --OR-- </div-->
@@ -186,7 +182,7 @@
         </div>
 
         <div>
-            <button class="" type="button" id="tables_button">Show all Study Groups</button>
+            <button type="button" id="tables_button">Show all Study Groups</button>
         </div>
 
         <div id="tables_div"></div>

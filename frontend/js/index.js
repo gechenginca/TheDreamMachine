@@ -16,12 +16,12 @@
             var gr_add = document.getElementById('group_add');
             var srch_box = document.getElementById('search_box');
             var srch_res = document.getElementById('search_results');
-            
+
             //All index sections
-            var all_div = document.getElementsByClassName("index_section");            
+            var all_div = document.getElementsByClassName("index_section");
             //All message sections
             var all_msg = document.getElementsByClassName("profile_msg");
-            
+
             //TODO
             var usr = api.getCurrentUser();
 
@@ -61,8 +61,9 @@
                 srch_res.style.display = 'block';
             }
 
+            document.querySelector('#tables_button').classList.remove("hidden");
         };
-        
+
         update_front_page();
 
         //sign up
@@ -142,7 +143,7 @@
 
         //Control Board:
         //Sign out
-        //Show: 
+        //Show:
             //Create Group div
             //Edit Profile div
         //My groups in search result div ( search by owner)
@@ -239,7 +240,6 @@
 
         // create study group
         // test to make sure the user right now
-        console.log(api.getCurrentUser());
         var create_table_parent = document.getElementById("group_add");
         var table_profile = create_table_parent.getElementsByClassName("profile_msg")[0];
         var table_form = create_table_parent.getElementsByTagName("form")[0];
@@ -259,83 +259,87 @@
                     table_profile.innerHTML = err;
                 } else {
                     console.log(message);
+                    update_front_page();
                 }
             });
         });
 
-        // display all tabls in selection
-        /*
-        api.getStudyTables(function(err, tables) {
-            if (err) {
-                console.log(err);
-            } else {
-                var element = document.createElement('select');
-                element.className = "select_btn";
-                element.id="selected";
-                element.innerHTML += `<option value="null">--please select a study group--</option>`
-                for (var i=0; tables[i] != null; i++) {
-                    element.innerHTML += `<option value="${tables[i]}">${tables[i]}</option>`;
+        // search group
+        var search_table_parent = document.getElementById("search_box");
+        var search_form = search_table_parent.getElementsByTagName("form")[0];
+        search_form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            // get the table information
+            var group_name = search_table_parent.getElementsByClassName("search_content")[0].value;
+            search_form.reset();
+            console.log(group_name);
+            // send api
+            api.getStudyTable(group_name, function(err, table) {
+                if (err) {
+                    document.querySelector('#tables_div').innerHTML = err;
+                } else {
+                    document.querySelector('#tables_div').innerHTML = "";
+                    var element = create_table_form(table);
+                    console.log(document.querySelector('#tables_div'));
+                    document.querySelector('#tables_div').prepend(element);
+                    update_front_page();
                 }
-                document.querySelector('#select_button').addEventListener("click", function(){
-                    var selected_table = document.getElementById("selected").value;
-                    // Enter the selected group
-                    if (selected_table != "null") {
-                        console.log(selected_table);
-                    } else {
-                        console.log("please choose a study group");
-                    }
-
-                })
-                document.querySelector('#select_bar').prepend(element);
-            }
+            });
         });
-        */
 
+        // show all group in form
         document.querySelector('#tables_button').addEventListener("click", function(){
             document.querySelector('#tables_button').classList.add("hidden");
             api.getStudyTables(function(err, tables) {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log(tables);
+                    document.querySelector('#tables_div').innerHTML = "";
                     for (var i=0; tables[i] != null; i++) {
                         api.getStudyTable(tables[i], function(err, table) {
                             if (err) {
                                 console.log(err);
                             } else {
-                                var element = document.createElement("div");
-                                console.log(table);
-                                element.className = "table_item index_section";
-                                element.innerHTML += `
-                                    <div class="table_par">
-                                        <span class="table_label">Name:</span>
-                                        <span class="table_name">${table._id}</span>
-                                    </div>
-                                    <div class="table_par">
-                                        <span class="table_label">Course:</span>
-                                        <span class="table_course">${table.course}</span>
-                                    </div>
-                                    <div class="table_par">
-                                        <span class="table_label">Times meeting:</span>
-                                        <div class="table_time">${table.meetingTimes}</div>
-                                    </div>
-                                    <div class="table_par">
-                                        <span class="table_label">Location:</span>
-                                        <span class="table_loc">${table.location}</span>
-                                    </div>
-                                    <div class="table_controls">
-                                        <button class="control">Enter</button>
-                                        <button class="control">Edit</button>
-                                    </div>
-                                `
+                                var element = create_table_form(table);
                                 document.querySelector('#tables_div').prepend(element);
                             }
                         });
                     }
                 }
-            })
+            });
 
-        })
+        });
+
+        // function of create table
+        var create_table_form = function(table) {
+            var element = document.createElement("div");
+            element.className = "table_item";
+            element.innerHTML += `
+                <div class="table_par">
+                    <span class="table_label">Name:</span>
+                    <span class="table_name">${table._id}</span>
+                </div>
+                    <div class="table_par">
+                    <span class="table_label">Course:</span>
+                    <span class="table_course">${table.course}</span>
+                </div>
+                    <div class="table_par">
+                    <span class="table_label">Times meeting:</span>
+                    <div class="table_time">${table.meetingTimes}</div>
+                </div>
+                    <div class="table_par">
+                    <span class="table_label">Location:</span>
+                    <span class="table_loc">${table.location}</span>
+                </div>
+                    <div class="table_controls">
+                    <button><a href="/studyTable.html" class="control">Enter</a></button>
+                    <button class="control">Edit</button>
+                    <button class="control">delete</button>
+                </div>
+            `
+
+            return element;
+        }
 
 
     };
