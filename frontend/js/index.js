@@ -334,10 +334,17 @@
                     <div class="table_controls">
                     <button><a href="/studyTable.html" class="control">Enter</a></button>
                     <button class="control">Edit</button>
-                    <button class="control">delete</button>
+                    <button class="control delete_button">delete</button>
                 </div>
             `
-
+            element.querySelector('.delete_button').addEventListener('click', function(){
+                api.deleteStudyTable(table._id, function(err, msg) {
+                    if (err) console.log(err);
+                    else {
+                        element.style.display = 'none';
+                    }
+                });
+            })
             return element;
         }
 
