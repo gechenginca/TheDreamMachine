@@ -145,7 +145,10 @@ var api = (function() {
     // TODO get group chat
 
     // TODO post to group chat
-
+    
+    module.saveCanvas = function(callback) {
+        send("GET", "/api/saveCanvas/", null, callback);
+    };
 
     return module;
 })();

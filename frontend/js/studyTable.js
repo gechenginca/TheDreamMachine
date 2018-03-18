@@ -129,9 +129,23 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById("mid_canvas").append(elem);
    }
 
+   function save() {
+      var elem = document.createElement('div');
+      elem.innerHTML = `
+      <button class="save">save</button>
+      `;
+      elem.querySelector('.save').addEventListener('click', function() {
+         api.saveCanvas(function(err) {
+            if (err) console.error(err);
+         });
+      });
+      document.getElementById("mid_canvas").append(elem);
+   }
+
    mainLoop();
    clearCanvas();
    colors();
    size();
    eraser();
+   save();
 });

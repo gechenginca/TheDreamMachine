@@ -32,6 +32,18 @@ app.use(function(req, res, next) {
 
 app.use(express.static('frontend'));
 
+const server = require('http').createServer(app);
+let PORT = process.env.PORT || 3000;
+const socketIo = require('socket.io');
+let tableId;
+let line_history = [];
+
+const io = socketIo.listen(server);
+server.listen(PORT, function(err) {
+    if (err) console.log(err);
+    else console.log("HTTP server on http://localhost:%s", PORT);
+});
+
 // let db = mongoose.connect('mongodb://localhost/user');
 // let db = mongoose.connect('mongodb+srv://c09project:tdm0322@cluster0-obj3a.mongodb.net/test');
 let db = mongoose.connect('mongodb://admin:thedreammachine@ds115569.mlab.com:15569/studytable');
@@ -53,6 +65,7 @@ connection.once('open', function() {
     //Databases:
     let User = require('./models/userModel.js');
     let StudyTable = require('./models/studyTableModel.js');
+    let Canvas = require('./models/canvasModel.js');
 
     const is_Authenticated = function(req, res, next) {
         if (!req.username) return res.status(401).end('access denied, please login');
@@ -203,7 +216,6 @@ connection.once('open', function() {
     // get all study tables
     // curl -b cookie.txt localhost:3000/api/studyTables/
     // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
-    // skip authenticated
     app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
         const studyTables = [];
         StudyTable.find({}).sort({ createdAt: 1 }).exec(function(err, allStudyTables) {
@@ -256,31 +268,72 @@ connection.once('open', function() {
         });
     });
 
-});
+    // TODO: set condition when user type localhost:3000/studytable.html, canvas must contain tableId
 
-const server = require('http').createServer(app);
-let PORT = process.env.PORT || 3000;
-const socketIo = require('socket.io');
-let line_history = [];
+    app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
+        StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
+            if (err) return res.status(500).end(err);
+            if (studyTable == null) return res.status(404).end('study table ' + req.params.tableId + ' does not exist');
+            saveTableId(req.params.tableId);
+            Canvas.findOne({ tableId: req.params.tableId }, function(err, existedCanvas) {
+                if (err) return res.status(500).end(err);
+                if (existedCanvas == null) {
+                    const newCanvas = new Canvas({tableId: req.params.tableId, data: []});
+                    newCanvas.save(function(err, newCanvas) {
+                        if (err) return console.error(err);
+                    });
+                } else {
+                    setLineHistory(existedCanvas.data);
+                }
+            });
+            res.redirect('/studytable.html');
+        });
+    });
 
-const io = socketIo.listen(server);
-server.listen(PORT, function(err) {
-    if (err) console.log(err);
-    else console.log("HTTP server on http://localhost:%s", PORT);
-});
+    app.get('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
+        Canvas.findOne({ tableId: tableId }, function(err, canvas) {
+            if (err) return console.error(err);
+            if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
+            canvas.data = line_history;
+            canvas.save(function(err, updatedCanvas) {
+                if (err) return console.error(err);
+            });
+            return res.json("");
+        });
+    });
 
-io.on('connection', function(socket) {
-    for (let i in line_history) {
-        socket.emit('draw_line', { line: line_history[i] });
+    function saveTableId(id) {
+        tableId = id;
     }
 
-    socket.on('draw_line', function(data) {
-        line_history.push(data.line);
-        io.emit('draw_line', { line: data.line });
+    function setLineHistory(data) {
+        line_history = data;
+    }
+
+    io.on('connection', function(socket) {
+        // Canvas.findOne({ tableId: tableId }, function(err, canvas) {
+        //     if (err) return console.error(err);
+        //     if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
+        //     setLineHistory(canvas.data);
+        // });
+
+        for (let i in line_history) {
+            socket.emit('draw_line', { line: line_history[i] });
+        }
+
+        socket.on('draw_line', function(data) {
+            line_history.push(data.line);
+            io.emit('draw_line', { line: data.line });
+        });
+
+        socket.on('clear', function(data) {
+            line_history = [];
+            io.emit('clear', {});
+        });
     });
 
-    socket.on('clear', function(data) {
-        line_history = [];
-        io.emit('clear', {});
-    });
 });
+
+
+
+
