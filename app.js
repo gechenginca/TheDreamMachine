@@ -268,7 +268,7 @@ connection.once('open', function() {
         });
     });
 
-    // TODO: set condition when user type localhost:3000/studytable.html, canvas must contain tableId
+    // TODO: set condition when user type localhost:3000/studytable.html, canvas must contain tableId. !!!consider force redirect after loading!!!
 
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
