@@ -1,3 +1,12 @@
+// This code is inspired of
+// "Create a Drawing App with HTML5 Canvas and JavaScript"
+// by William Malone
+// http://www.williammalone.com/articles/create-html5-canvas-javascript-drawing-app/
+// and
+// "A collaborative drawing canvas with node.js and socket.io"
+// by CodeAndCoffeee
+// http://code-and.coffee/post/2015/collaborative-drawing-canvas-node-websocket/
+
 document.addEventListener("DOMContentLoaded", function() {
    var mouse = {
       click: false,
