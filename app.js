@@ -268,8 +268,6 @@ connection.once('open', function() {
         });
     });
 
-    // TODO: set condition when user type localhost:3000/studytable.html, canvas must contain tableId. !!!consider force redirect after loading!!!
-
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -284,9 +282,9 @@ connection.once('open', function() {
                     });
                 } else {
                     setLineHistory(existedCanvas.data);
+                    res.redirect('/studytable.html');
                 }
             });
-            res.redirect('/studytable.html');
         });
     });
 
@@ -310,7 +308,6 @@ connection.once('open', function() {
         line_history = data;
     }
 
-    // TODO: fix bug that load empty line history before retrieving the real data from remote db
     io.on('connection', function(socket) {
         // Canvas.findOne({ tableId: tableId }, function(err, canvas) {
         //     if (err) return console.error(err);
