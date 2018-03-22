@@ -346,6 +346,7 @@
             });
             element.querySelector('.edit_button').addEventListener('click', function() {
                 document.querySelector('#search_results').style.display = 'none';
+                document.querySelector('#search_box').style.display = 'none';
                 var update_form_parent = document.getElementById("edit_div");
                 var edit_form = document.createElement('form');
                 edit_form.className = "profile_form";
@@ -382,17 +383,15 @@
                         if (err) {
                             console.log(err);
                         } else {
-                            //TODO: replace the information after update
+                            update_front_page();
+                            update_form_parent.innerHTML = ``;
+                            document.querySelector('#tables_div').innerHTML = ``;
                         }
                     });
-                    update_form_parent.innerHTML = ``;
-                    document.querySelector('#search_results').style.display = 'block';
                 });
             });
             return element;
         }
-
-
     };
 
 
