@@ -282,7 +282,7 @@ connection.once('open', function() {
                     });
                 } else {
                     setLineHistory(existedCanvas.data);
-                    res.redirect('/studytable.html');
+                    res.redirect('/studyTable.html');
                 }
             });
         });
@@ -309,12 +309,6 @@ connection.once('open', function() {
     }
 
     io.on('connection', function(socket) {
-        // Canvas.findOne({ tableId: tableId }, function(err, canvas) {
-        //     if (err) return console.error(err);
-        //     if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
-        //     setLineHistory(canvas.data);
-        // });
-
         for (let i in line_history) {
             socket.emit('draw_line', { line: line_history[i] });
         }
