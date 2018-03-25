@@ -39,8 +39,7 @@ var Channel = {
         console.log('data channel created, creating offer');
         Channel.peerConnection.createOffer(
             function(offer){
-                console.log(Channel.peerConnection.setLocalDescription(offer));
-                // Channel.peerConnection.setLocalDescription(offer);
+                Channel.peerConnection.setLocalDescription(offer);
                 Channel.socket.emit('offer', JSON.stringify(offer));
             },
             function(err){
@@ -64,14 +63,17 @@ var Channel = {
         console.log('room is full');
     },
     onAnswer: function(answer){
+        console.log('on answer');
         var rtcAnswer = new RTCSessionDescription(JSON.parse(answer));
-        Channel.peerConnection.setRemoteDescription(rtcAnswer);
+        // ERROR! Failed to set remote answer sdp!
+        Channel.peerConnection.setRemoteDescription(rtcAnswer).catch(function(err){console.log('err');});
     },
     onOffer: function(offer){
         Channel.handlePeerConnection();
         Channel.createAnswer(offer);
     },
     createAnswer: function(offer){
+        console.log('creating answer');
         var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
         Channel.peerConnection.setRemoteDescription(rtcOffer);
         Channel.peerConnection.createAnswer(
