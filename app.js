@@ -342,6 +342,10 @@ connection.once('open', function() {
             console.log('relaying answer');
             socket.broadcast.emit('answer', answer);
         });
+
+        socket.on('disconnect', function() {
+            console.log('client disconnected');
+        });
 /*----------------------------webRTC End---------------------------------------*/
 
         for (let i in line_history) {
@@ -356,10 +360,6 @@ connection.once('open', function() {
         socket.on('clear', function(data) {
             line_history = [];
             io.emit('clear', {});
-        });
-
-        socket.on('disconnect', function() {
-            console.log('client disconnected');
         });
     });
 

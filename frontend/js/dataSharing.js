@@ -39,7 +39,8 @@ var Channel = {
         console.log('data channel created, creating offer');
         Channel.peerConnection.createOffer(
             function(offer){
-                Channel.peerConnection.setLocalDescription(offer);
+                console.log(Channel.peerConnection.setLocalDescription(offer));
+                // Channel.peerConnection.setLocalDescription(offer);
                 Channel.socket.emit('offer', JSON.stringify(offer));
             },
             function(err){
@@ -52,13 +53,15 @@ var Channel = {
         Channel.dataChannel.send('rtc data to be sent');
     },
     onJoin: function(){
-        Channel.readyButton.setAttribute('disabled', 'disabled');
+        console.log('onJoin');
     },
     onReady: function(){
-        Channel.connectButton.removeAttribute('disabled');
+        console.log('onReady');
+        Channel.establishConnection();
+        // Channel.sendData();
     },
     onFull: function(){
-        console.log('boo :( room is full');
+        console.log('room is full');
     },
     onAnswer: function(answer){
         var rtcAnswer = new RTCSessionDescription(JSON.parse(answer));
@@ -113,11 +116,8 @@ var Channel = {
         };
     }
 };
-Channel.readyButton = document.getElementById('ready');
-Channel.readyButton.addEventListener('click', Channel.getReady, false);
-
-Channel.connectButton = document.getElementById('connect');
-Channel.connectButton.addEventListener('click', Channel.establishConnection, false);
-
-Channel.sendButton = document.getElementById('send-data');
-Channel.sendButton.addEventListener('click', Channel.sendData, false);
+(function() {
+    window.onload = function() {
+        Channel.getReady();
+    };
+}());
