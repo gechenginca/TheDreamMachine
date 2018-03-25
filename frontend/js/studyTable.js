@@ -42,11 +42,11 @@ document.addEventListener("DOMContentLoaded", function() {
    };
 
    socket.on('connect', function() {
-      console.log('connected to server');
+      // console.log('connected to server');
    });
 
    socket.on('disconnect', function() {
-      console.log('disconnected to server');
+      // console.log('disconnected to server');
    });
 
    // draw line received from server

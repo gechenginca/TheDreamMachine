@@ -309,7 +309,7 @@ connection.once('open', function() {
     }
 
     io.on('connection', function(socket) {
-        console.log('client connected');
+        // console.log('client connected');
 
 /*----------------------------webRTC Begin---------------------------------------*/
         socket.on('join', function(room){
@@ -322,12 +322,13 @@ connection.once('open', function() {
             else if (numClients == 1) {
                 socket.join(room);
                 socket.emit('join', room);
-                socket.emit('ready', room);
+                // socket.emit('ready', room);
                 socket.broadcast.emit('ready', room);
             }
             else {
                 socket.emit('full', room);
             }
+            console.log(io.sockets.adapter.rooms[room]);
         });
 
         socket.on('candidate', function(candidate){
@@ -344,7 +345,7 @@ connection.once('open', function() {
         });
 
         socket.on('disconnect', function() {
-            console.log('client disconnected');
+            // console.log('client disconnected');
         });
 /*----------------------------webRTC End---------------------------------------*/
 

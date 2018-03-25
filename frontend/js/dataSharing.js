@@ -52,28 +52,29 @@ var Channel = {
         Channel.dataChannel.send('rtc data to be sent');
     },
     onJoin: function(){
-        console.log('onJoin');
+        // console.log('onJoin');
+        // Channel.readyButton.setAttribute('disabled', 'disabled');
     },
-    onReady: function(){
-        console.log('onReady');
-        Channel.establishConnection();
+    onReady: function(room){
+        // console.log('onReady');
+        // Channel.connectButton.removeAttribute('disabled');
+        Channel.establishConnection(); // add promise to send signal to server to let another user establishConnection()
         // Channel.sendData();
     },
     onFull: function(){
         console.log('room is full');
     },
     onAnswer: function(answer){
-        console.log('on answer');
+        // console.log('on answer');
         var rtcAnswer = new RTCSessionDescription(JSON.parse(answer));
-        // ERROR! Failed to set remote answer sdp!
-        Channel.peerConnection.setRemoteDescription(rtcAnswer).catch(function(err){console.log('err');});
+        Channel.peerConnection.setRemoteDescription(rtcAnswer);
     },
     onOffer: function(offer){
         Channel.handlePeerConnection();
         Channel.createAnswer(offer);
     },
     createAnswer: function(offer){
-        console.log('creating answer');
+        // console.log('creating answer');
         var rtcOffer = new RTCSessionDescription(JSON.parse(offer));
         Channel.peerConnection.setRemoteDescription(rtcOffer);
         Channel.peerConnection.createAnswer(
@@ -99,8 +100,8 @@ var Channel = {
         Channel.dataChannel.onopen = function(){
             console.log('data channel opened');
             Channel.dataChannel.send("Hello World!");
-            Channel.sendButton.removeAttribute('disabled');
-            Channel.connectButton.setAttribute('disabled', 'disabled');
+            // Channel.sendButton.removeAttribute('disabled');
+            // Channel.connectButton.setAttribute('disabled', 'disabled');
         };
 
         Channel.dataChannel.onclose = function(){
@@ -123,3 +124,11 @@ var Channel = {
         Channel.getReady();
     };
 }());
+// Channel.readyButton = document.getElementById('ready');
+// Channel.readyButton.addEventListener('click', Channel.getReady, false);
+
+// Channel.connectButton = document.getElementById('connect');
+// Channel.connectButton.addEventListener('click', Channel.establishConnection, false);
+
+// Channel.sendButton = document.getElementById('send-data');
+// Channel.sendButton.addEventListener('click', Channel.sendData, false);
