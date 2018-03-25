@@ -41,6 +41,14 @@ document.addEventListener("DOMContentLoaded", function() {
       mouse.move = true;
    };
 
+   socket.on('connect', function() {
+      console.log('connected to server');
+   });
+
+   socket.on('disconnect', function() {
+      console.log('disconnected to server');
+   });
+
    // draw line received from server
    socket.on('draw_line', function (data) {
       var line = data.line;

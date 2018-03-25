@@ -309,6 +309,41 @@ connection.once('open', function() {
     }
 
     io.on('connection', function(socket) {
+        console.log('client connected');
+
+/*----------------------------webRTC Begin---------------------------------------*/
+        socket.on('join', function(room){
+            var clients = io.sockets.adapter.rooms[room];
+            var numClients = (typeof clients !== 'undefined') ? clients.length : 0;
+            if (numClients == 0){
+                socket.join(room);
+                socket.emit('join', room);
+            }
+            else if (numClients == 1) {
+                socket.join(room);
+                socket.emit('join', room);
+                socket.emit('ready', room);
+                socket.broadcast.emit('ready', room);
+            }
+            else {
+                socket.emit('full', room);
+            }
+        });
+
+        socket.on('candidate', function(candidate){
+            socket.broadcast.emit('candidate', candidate);
+        });
+
+        socket.on('offer', function(offer){
+            socket.broadcast.emit('offer', offer);
+        });
+
+        socket.on('answer', function(answer){
+            console.log('relaying answer');
+            socket.broadcast.emit('answer', answer);
+        });
+/*----------------------------webRTC End---------------------------------------*/
+
         for (let i in line_history) {
             socket.emit('draw_line', { line: line_history[i] });
         }
@@ -321,6 +356,10 @@ connection.once('open', function() {
         socket.on('clear', function(data) {
             line_history = [];
             io.emit('clear', {});
+        });
+
+        socket.on('disconnect', function() {
+            console.log('client disconnected');
         });
     });
 
