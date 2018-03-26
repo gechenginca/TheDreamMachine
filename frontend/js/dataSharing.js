@@ -8,6 +8,7 @@ var Channel = {
     getReady: function(){
         Channel.socket.on('join', Channel.onJoin);
         Channel.socket.on('ready', Channel.onReady);
+        Channel.socket.on('connectClient', Channel.onConnectClient);
         Channel.socket.on('full', Channel.onFull);
         Channel.socket.on('answer', Channel.onAnswer);
         Channel.socket.on('offer', Channel.onOffer);
@@ -52,14 +53,27 @@ var Channel = {
         Channel.dataChannel.send('rtc data to be sent');
     },
     onJoin: function(){
-        // console.log('onJoin');
+        console.log('onJoin');
         // Channel.readyButton.setAttribute('disabled', 'disabled');
     },
     onReady: function(room){
-        // console.log('onReady');
+        console.log('onReady');
         // Channel.connectButton.removeAttribute('disabled');
-        Channel.establishConnection(); // add promise to send signal to server to let another user establishConnection()
-        // Channel.sendData();
+        Channel.establishConnection();
+        // var connect = new Promise(function(resolve, reject) {
+        //     Channel.establishConnection();
+        //     resolve(room);
+        // });
+        // connect.then(function(fullfilled) {
+        //     Channel.socket.emit('connectClient', room);
+        // });
+
+        // setTimeout(function() {
+        //     Channel.socket.emit('connectClient', room);
+        // }, 1000);
+    },
+    onConnect: function(room){
+        Channel.establishConnection();
     },
     onFull: function(){
         console.log('room is full');

@@ -322,13 +322,15 @@ connection.once('open', function() {
             else if (numClients == 1) {
                 socket.join(room);
                 socket.emit('join', room);
-                // socket.emit('ready', room);
-                socket.broadcast.emit('ready', room);
+                socket.emit('ready', room);
+                // socket.broadcast.emit('ready', room);
+                setTimeout(function() {
+                    socket.broadcast.emit('ready', room);
+                }, 3000);
             }
             else {
                 socket.emit('full', room);
             }
-            console.log(io.sockets.adapter.rooms[room]);
         });
 
         socket.on('candidate', function(candidate){
@@ -342,6 +344,11 @@ connection.once('open', function() {
         socket.on('answer', function(answer){
             console.log('relaying answer');
             socket.broadcast.emit('answer', answer);
+        });
+
+        socket.on('connectClient', function(room) {
+            // socket.broadcast.emit('connectClient', room);
+            socket.broadcast.emit('connectClient', room);
         });
 
         socket.on('disconnect', function() {
