@@ -320,13 +320,22 @@ connection.once('open', function() {
                 socket.emit('join', room);
             }
             else if (numClients == 1) {
-                socket.join(room);
-                socket.emit('join', room);
-                socket.emit('ready', room);
+                // socket.join(room);
+                // socket.emit('join', room);
+                // socket.emit('ready', room);
                 // socket.broadcast.emit('ready', room);
-                setTimeout(function() {
-                    socket.broadcast.emit('ready', room);
-                }, 3000);
+                var connect = new Promise(function(resolve, reject) {
+                    socket.join(room);
+                    resolve(room);
+                });
+                connect.then(function(fullfilled) {
+                    socket.emit('join', room);
+                    socket.emit('ready', room);
+                    // socket.broadcast.emit('ready', room);
+                    setTimeout(function() {
+                        socket.broadcast.emit('ready', room);
+                    }, 500);
+                });
             }
             else {
                 socket.emit('full', room);
