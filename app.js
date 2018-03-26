@@ -330,10 +330,10 @@ connection.once('open', function() {
                 });
                 connect.then(function(fullfilled) {
                     socket.emit('join', room);
-                    socket.emit('ready', room);
-                    // socket.broadcast.emit('ready', room);
-                    setTimeout(function() {
-                        socket.broadcast.emit('ready', room);
+                    socket.emit('ready', line_history);
+
+                    setTimeout(function() { // TODO: Improve this fix
+                        socket.broadcast.emit('ready', line_history);
                     }, 500);
                 });
             }

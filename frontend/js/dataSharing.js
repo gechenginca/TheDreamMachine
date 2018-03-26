@@ -3,6 +3,9 @@
 // by Jonathan N. Lee
 // https://jon--lee.github.io/blog/2015/09/29/DataChannels-with-WebRTC.html
 
+var roomId = 0;
+var line_history = null;
+
 var Channel = {
     socket: io(),
     getReady: function(){
@@ -12,7 +15,8 @@ var Channel = {
         Channel.socket.on('full', Channel.onFull);
         Channel.socket.on('answer', Channel.onAnswer);
         Channel.socket.on('offer', Channel.onOffer);
-        Channel.socket.emit('join', 'room');
+        Channel.socket.emit('join', roomId);
+        roomId++;
     },
     onIceCandidate: function(event){
         if (event.candidate){
@@ -48,18 +52,32 @@ var Channel = {
             }
         );
     },
-    sendData: function(){
+    sendData: function(line_history){
         console.log('sending data to the peer');
-        Channel.dataChannel.send('rtc data to be sent');
+        Channel.dataChannel.send(line_history);
     },
     onJoin: function(){
         console.log('onJoin');
         // Channel.readyButton.setAttribute('disabled', 'disabled');
     },
-    onReady: function(room){
+    onReady: function(line_history){
         console.log('onReady');
-        // Channel.connectButton.removeAttribute('disabled');
         Channel.establishConnection();
+        line_history = line_history;
+        setTimeout(function() {
+            Channel.sendData(line_history);
+        }, 1000);
+
+        // var build = new Promise(function(resolve, reject) {
+        //     Channel.establishConnection();
+        //     line_history = line_history;
+        //     resolve();
+        // });
+        // build.then(setTimeout(function() {
+        //     Channel.sendData(line_history);
+        // }), 1000);
+
+        // Channel.connectButton.removeAttribute('disabled');
         // var connect = new Promise(function(resolve, reject) {
         //     Channel.establishConnection();
         //     resolve(room);
@@ -129,6 +147,7 @@ var Channel = {
             console.log('receive channel event open');
         };
         receiveChannel.onmessage = function(event){
+            line_history = event.data;
             console.log('receive channel event: ' + event.data);
         };
     }
@@ -144,5 +163,5 @@ var Channel = {
 // Channel.connectButton = document.getElementById('connect');
 // Channel.connectButton.addEventListener('click', Channel.establishConnection, false);
 
-// Channel.sendButton = document.getElementById('send-data');
-// Channel.sendButton.addEventListener('click', Channel.sendData, false);
+Channel.sendButton = document.getElementById('send-data');
+Channel.sendButton.addEventListener('click', Channel.sendData, false);
