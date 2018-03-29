@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const app = express();
+ExpressPeerServer = require('peer').ExpressPeerServer;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -37,6 +38,8 @@ let PORT = process.env.PORT || 3000;
 const socketIo = require('socket.io');
 let tableId;
 let line_history = [];
+
+app.use('/peer', ExpressPeerServer(server, {}));
 
 const io = socketIo.listen(server);
 server.listen(PORT, function(err) {
@@ -268,6 +271,11 @@ connection.once('open', function() {
         });
     });
 
+    app.get('/api/canvas/data/', is_Authenticated, function(req, res, next) {
+        return res.json(line_history);
+        // return res.json(null);
+    })
+
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -288,11 +296,12 @@ connection.once('open', function() {
         });
     });
 
-    app.get('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
+    app.patch('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
         Canvas.findOne({ tableId: tableId }, function(err, canvas) {
             if (err) return console.error(err);
             if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
-            canvas.data = line_history;
+            setLineHistory(req.body.line_history);
+            canvas.data = req.body.line_history;
             canvas.save(function(err, updatedCanvas) {
                 if (err) return console.error(err);
             });
@@ -308,76 +317,29 @@ connection.once('open', function() {
         line_history = data;
     }
 
+    var ids = [];
     io.on('connection', function(socket) {
         // console.log('client connected');
-
 /*----------------------------webRTC Begin---------------------------------------*/
-        socket.on('join', function(room){
-            var clients = io.sockets.adapter.rooms[room];
-            var numClients = (typeof clients !== 'undefined') ? clients.length : 0;
-            if (numClients == 0){
-                socket.join(room);
-                socket.emit('join', room);
-            }
-            else if (numClients == 1) {
-                // socket.join(room);
-                // socket.emit('join', room);
-                // socket.emit('ready', room);
-                // socket.broadcast.emit('ready', room);
-                var connect = new Promise(function(resolve, reject) {
-                    socket.join(room);
-                    resolve(room);
-                });
-                connect.then(function(fullfilled) {
-                    socket.emit('join', room);
-                    socket.emit('ready', line_history);
-
-                    setTimeout(function() { // TODO: Improve this fix
-                        socket.broadcast.emit('ready', line_history);
-                    }, 500);
-                });
-            }
-            else {
-                socket.emit('full', room);
-            }
-        });
-
-        socket.on('candidate', function(candidate){
-            socket.broadcast.emit('candidate', candidate);
-        });
-
-        socket.on('offer', function(offer){
-            socket.broadcast.emit('offer', offer);
-        });
-
-        socket.on('answer', function(answer){
-            console.log('relaying answer');
-            socket.broadcast.emit('answer', answer);
-        });
-
-        socket.on('connectClient', function(room) {
-            // socket.broadcast.emit('connectClient', room);
-            socket.broadcast.emit('connectClient', room);
-        });
-
-        socket.on('disconnect', function() {
-            // console.log('client disconnected');
-        });
+        socket.on('clientid', function(id) {
+            ids.push(id);
+            socket.broadcast.emit('clientid', ids);
+        })
 /*----------------------------webRTC End---------------------------------------*/
 
-        for (let i in line_history) {
-            socket.emit('draw_line', { line: line_history[i] });
-        }
+        // for (let i in line_history) {
+        //     socket.emit('draw_line', { line: line_history[i] });
+        // }
 
-        socket.on('draw_line', function(data) {
-            line_history.push(data.line);
-            io.emit('draw_line', { line: data.line });
-        });
+        // socket.on('draw_line', function(data) {
+        //     line_history.push(data.line);
+        //     io.emit('draw_line', { line: data.line });
+        // });
 
-        socket.on('clear', function(data) {
-            line_history = [];
-            io.emit('clear', {});
-        });
+        // socket.on('clear', function(data) {
+        //     line_history = [];
+        //     io.emit('clear', {});
+        // });
     });
 
 });

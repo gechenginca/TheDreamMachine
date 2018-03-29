@@ -146,8 +146,12 @@ var api = (function() {
 
     // TODO post to group chat
     
-    module.saveCanvas = function(callback) {
-        send("GET", "/api/saveCanvas/", null, callback);
+    module.saveCanvas = function(data, callback) {
+        send("PATCH", "/api/saveCanvas/", {line_history: data}, callback);
+    };
+
+    module.getCanvas = function(callback) {
+        send("GET", "/api/canvas/data/", null, callback);
     };
 
     return module;
