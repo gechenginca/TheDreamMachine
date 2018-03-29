@@ -4,123 +4,149 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>Study Table</title>
-    <link href="style/main.css" rel="stylesheet" type="text/css" />  
+    <meta http-equiv="X-UA-Compatible" constent="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style/main.css" rel="stylesheet" type="text/css" />
     <link href="style/studyTables.css" rel="stylesheet" type="text/css" />
+    <title>Study Table</title>
+    <!-- use Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
 
 </head>
 
-<body>
+<body class="bg-light">
 
 <!-- Place home, my tables, profile, sign out here-->
 
 <header>
-        <h1><a href="/" id="title">TODO</a></h1>
+    <h1 class="text-center"><a href="/" id="title">TODO</a></h1>
+    <div class="ml-5">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-canvas-tab" data-toggle="pill" href="#pills-canvas" role="tab" aria-controls="pills-canvas" aria-selected="true">Canvas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-chat-tab" data-toggle="pill" href="#pills-chat" role="tab" aria-controls="pills-chat" aria-selected="false">Chat</a>
+            </li>
+        </ul>
+    </div>
+
 </header>
 
-<div class="table_app">
 
-    <!-- Place voice/user box here -->
-    <div id="left_panel" class="panel">
-        <div id="users">
-            <h1>Users</h1>
-            <div id="users_container" class="container">
-            
-                <!-- Place list of users here -->
-                <!-- Username, if mic is on -->
 
-                <!-- Example user -->
-                <div class="user_bar">
-                    <span class="user_pic"></span>
-                    <span class="user_name">noname</span>
-                    <span class="user_mic"></span>
+<div>
+
+
+    <div class="tab-content" id="pills-tabContent">
+        <!-- Place canvas here -->
+        <div class="tab-pane fade show active" id="pills-canvas" role="tabpanel" aria-labelledby="pills-canvas-tab">
+            <div id="middle_panel" class="aligen-items-center">
+                <div id="bot_canvas" class="btn-toolbar ml-5" role="toolbar">
+                    <h5 class="mr-2 mt-1">Canvas' tools:</h5>
                 </div>
+                <div id="mid_canvas" class="text-center mt-2">
+                    <canvas id="canvas" class="w-75 border border-danger"></canvas>
+                </div>
+
             </div>
-            
         </div>
 
-        
-        <div id="files">
-            <h1>Files</h1>
-            <div id="files_cointainer" class="container">
-                <!-- Example file -->
-                <div class="file_bar">
-                    <a class="file_name">Some file</a>
+
+        <div class="tab-pane fade" id="pills-chat" role="tabpanel" aria-labelledby="pills-chat-tab">
+            <div class="row justify-content-center">
+
+                <!-- Place voice/user box here -->
+                <div id="user_files" class="col-2 container">
+                    <div id="users">
+                        <h2>Users</h2>
+                        <div id="users_container" class="container">
+
+                            <!-- Place list of users here -->
+                            <!-- Username, if mic is on -->
+
+                            <!-- Example user -->
+                            <div class="row">
+                                <span class="col-2">
+                                    <a href="..." class="thumbnail"></a>
+                                </span>
+                                <span class="col-3">noname</span>
+                                <span class="col-2"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="files">
+                        <h2>Files</h2>
+                        <div id="files_cointainer" class="container">
+                            <!-- Example file -->
+                            <div class="file_bar">
+                                <a class="file_name">Some file</a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+                <!-- Place Chat and shared files here -->
+
+                <div id="chat_bar" class="col-9 container">
+                    <div id="chat">
+                        <h2>Chat</h2>
+                        <div id="chat_cointainer" class="chat_cointainer">
+                             <!-- Example chat -->
+                            <div class="chat_bar">
+                                <span class="chat_user_pic"></span>
+                                <span class="chat_user_name">noname</span>
+                                <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
+                            </div>
+
+                            <div class="chat_bar">
+                                <span class="chat_user_pic"></span>
+                                <span class="chat_user_name">noname2</span>
+                                <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
+                            </div>
+
+                            <div class="chat_bar">
+                                <span class="chat_user_pic"></span>
+                                <span class="chat_user_name">noname3</span>
+                                <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
+                            </div>
+
+                            <div class="chat_bar">
+                                <span class="chat_user_pic"></span>
+                                <span class="chat_user_name">noname</span>
+                                <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
+                            </div>
+
+
+                        </div>
+
+                        <div id="chat_submit">
+                            <form class="form" id="chat_form">
+                                <textarea rows="3" id="chat_form_text" class="mt-2 mr-3 ml-3 mb-2" placeholder="Enter text" required></textarea>
+
+                                <button type="submit" id="chat_form_button" class="btn btn-primary">Send</button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
 
     </div>
-
-
-    <!-- Place canvas here -->
-
-    <div id="middle_panel" class="panel">
-        <div id="top_canvas" class="canv_tools">
-        
-        </div>
-        <div id="mid_canvas">
-            <canvas id="canvas"></canvas>
-        </div>
-        <div id="bot_canvas" class="canv_tools">
-        
-        </div>
-
-    </div>
-
-    <!-- Place Chat and shared files here -->
-    <div id="right_panel" class="panel">
-        <div id="chat">
-            <h1>Chat</h1>
-            <div id="chat_cointainer" class="container">
-                 <!-- Example chat -->
-                <div class="chat_bar">
-                    <span class="chat_user_pic"></span>
-                    <span class="chat_user_name">noname</span>
-                    <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
-                </div>
-
-                <div class="chat_bar">
-                    <span class="chat_user_pic"></span>
-                    <span class="chat_user_name">noname2</span>
-                    <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
-                </div>
-
-                <div class="chat_bar">
-                    <span class="chat_user_pic"></span>
-                    <span class="chat_user_name">noname3</span>
-                    <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
-                </div>
-
-                <div class="chat_bar">
-                    <span class="chat_user_pic"></span>
-                    <span class="chat_user_name">noname</span>
-                    <span class="chat_content">This is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my messageThis is my message</span>
-                </div>
-
-
-            </div>
-            
-            <div id="chat_submit">
-                <form class="form" id="chat_form">
-                    <textarea rows="2" id="chat_form_text" class="" 
-                        name="" placeholder="Enter text" required>
-                    </textarea>
-              
-                    <button type="submit" id="chat_form_button" class="">Send</button>
-                </form>
-
-            </div>
-        </div>
-
-            
-            
-    </div>
-
 
 </div>
 <script src="socket.io/socket.io.js"></script>
 <script src="js/studyTable.js"></script>
 <script src="js/api.js"></script>
 
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/UTSCC09/TheDreamMachine#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "bootstrap": "^4.0.0",
     "cookie": "^0.3.1",
     "express": "^4.16.2",
     "express-session": "^1.15.6",

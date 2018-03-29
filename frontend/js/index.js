@@ -332,64 +332,69 @@
                 </div>
                     <div class="table_controls">
                     <button class="control"><a href="/api/canvas/${table._id}/">Enter</a></button>
+                `;
+                if (api.getCurrentUser() == table.owner) {
+                    element.innerHTML += `
                     <button class="control edit_button">Edit</button>
                     <button class="control delete_button">delete</button>
-                </div>
-            `;
-            element.querySelector('.delete_button').addEventListener('click', function(){
-                api.deleteStudyTable(table._id, function(err, msg) {
-                    if (err) console.log(err);
-                    else {
-                        element.style.display = 'none';
-                    }
-                });
-            });
-            element.querySelector('.edit_button').addEventListener('click', function() {
-                document.querySelector('#search_results').style.display = 'none';
-                document.querySelector('#search_box').style.display = 'none';
-                var update_form_parent = document.getElementById("edit_div");
-                var edit_form = document.createElement('form');
-                edit_form.className = "profile_form";
-                edit_form.innerHTML += `
-                    <div>please enter update info forllowing: location, type, pri or pub, description, time, and topic</div>
-                    <input type="text" class="locattion" placeholder="${table.location}" required></input>
-                    <input type="text" class="type" placeholder="${table.type}" required></input>
-                    <input type="text" class="priOrPub" placeholder="${table.priOrPub}" required></input>
-                    <input type="textarea" class="description" placeholder="${table.description}" required></input>
-                    <input type="textarea" class="times" placeholder="${table.meetingTimes}" required></input>
-                    <input type="text" class="topic" placeholder="${table.meetingTopics}" required></input>
-                    <button type="submit" class="group_update">Apply</button>
-                `;
-                update_form_parent.prepend(edit_form);
-                document.querySelector('#group_edit').style.display = 'block';
-
-                var table_form = update_form_parent.getElementsByTagName("form")[0];
-                table_form.addEventListener("submit", function(e) {
-                    e.preventDefault();
-                    // get the table information
-                    var group_course = table.course;
-                    var group_locattion = table_form.getElementsByClassName("locattion")[0].value;
-                    var group_type = table_form.getElementsByClassName("type")[0].value;
-                    var group_priOrPub = table_form.getElementsByClassName("priOrPub")[0].value;
-                    var group_description = table_form.getElementsByClassName("description")[0].value;
-                    var group_time = table_form.getElementsByClassName("times")[0].value;
-                    var group_topic = table_form.getElementsByClassName("topic")[0].value;
-                    // cleaning
-                    table_form.reset();
-
-                    // sned API
-                    var updateProfile = {course: group_course, location: group_locattion, type: group_type, priOrPub: group_priOrPub, description: group_description, members: table.members, meetingTimes: group_time, meetingTopics: group_topic};
-                    api.updateStudyTable(table._id, updateProfile, function(err, update) {
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            update_front_page();
-                            update_form_parent.innerHTML = ``;
-                            document.querySelector('#tables_div').innerHTML = ``;
+                    `
+                };
+            if (api.getCurrentUser() == table.owner) {
+                element.querySelector('.delete_button').addEventListener('click', function(){
+                    api.deleteStudyTable(table._id, function(err, msg) {
+                        if (err) console.log(err);
+                        else {
+                            element.style.display = 'none';
                         }
                     });
                 });
-            });
+                element.querySelector('.edit_button').addEventListener('click', function() {
+                    document.querySelector('#search_results').style.display = 'none';
+                    document.querySelector('#search_box').style.display = 'none';
+                    var update_form_parent = document.getElementById("edit_div");
+                    var edit_form = document.createElement('form');
+                    edit_form.className = "profile_form";
+                    edit_form.innerHTML += `
+                        <div>please enter update info forllowing: location, type, pri or pub, description, time, and topic</div>
+                        <input type="text" class="locattion" placeholder="${table.location}" required></input>
+                        <input type="text" class="type" placeholder="${table.type}" required></input>
+                        <input type="text" class="priOrPub" placeholder="${table.priOrPub}" required></input>
+                        <input type="textarea" class="description" placeholder="${table.description}" required></input>
+                        <input type="textarea" class="times" placeholder="${table.meetingTimes}" required></input>
+                        <input type="text" class="topic" placeholder="${table.meetingTopics}" required></input>
+                        <button type="submit" class="group_update">Apply</button>
+                    `;
+                    update_form_parent.prepend(edit_form);
+                    document.querySelector('#group_edit').style.display = 'block';
+
+                    var table_form = update_form_parent.getElementsByTagName("form")[0];
+                    table_form.addEventListener("submit", function(e) {
+                        e.preventDefault();
+                        // get the table information
+                        var group_course = table.course;
+                        var group_locattion = table_form.getElementsByClassName("locattion")[0].value;
+                        var group_type = table_form.getElementsByClassName("type")[0].value;
+                        var group_priOrPub = table_form.getElementsByClassName("priOrPub")[0].value;
+                        var group_description = table_form.getElementsByClassName("description")[0].value;
+                        var group_time = table_form.getElementsByClassName("times")[0].value;
+                        var group_topic = table_form.getElementsByClassName("topic")[0].value;
+                        // cleaning
+                        table_form.reset();
+
+                        // sned API
+                        var updateProfile = {course: group_course, location: group_locattion, type: group_type, priOrPub: group_priOrPub, description: group_description, members: table.members, meetingTimes: group_time, meetingTopics: group_topic};
+                        api.updateStudyTable(table._id, updateProfile, function(err, update) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                update_front_page();
+                                update_form_parent.innerHTML = ``;
+                                document.querySelector('#tables_div').innerHTML = ``;
+                            }
+                        });
+                    });
+                });
+            }
             return element;
         }
     };

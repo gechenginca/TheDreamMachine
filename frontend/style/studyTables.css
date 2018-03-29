@@ -1,49 +1,4 @@
 
-
-.table_app 
-{
-    display: grid;
-    
-    /*
-    grid-template-columns: 
-        [usrs] 1fr
-        [canv0] 100px 
-        [canv1] 100px
-        [canv2] 100px
-        [chat0] 1fr
-        [chat2] 1fr
-        ;
-    
-    grid-template-rows:
-        [reg] 300px
-        [overflow] 300px
-        ;
-    */
-
-    max-width: 1600px;
-    margin: auto;
-    
-    grid-template-columns: 
-        1fr
-        auto 
-        auto
-        auto
-        1fr
-        1fr
-        ;
-    
-    grid-template-rows:
-        650px
-        450px
-        ;
-
-    grid-template-areas:
-        "user canv canv canv chat chat"
-        ". user2 chat2 chat2 . ."
-        ;
-
-}
-
 #left_panel
 {
     grid-area: user;
@@ -63,9 +18,9 @@
 .panel
 {
     border-style: solid;
-    border-color: red;
-    margin: 5px;
-    padding: 0px;
+    border-color: blue;
+    margin: 10px;
+    padding: 10px;
 }
 
 .container
@@ -74,10 +29,10 @@
     border-color: red;
     padding: 0px;
     margin-bottom: 5px;
-    margin-top: 5px;
+
     margin-left: 0px;
     margin-right: 0px;
-    
+
     overflow: auto;
     scrollbar-base-color: gold;
 
@@ -88,7 +43,6 @@
 #chat
 {
     display: grid;
-    height: 100%;
     grid-template-rows:
         15%
         70%
@@ -108,8 +62,6 @@
 
     display: grid;
     grid-template-columns: 
-        
-        100px
         1fr
     ;
     grid-template-areas:
@@ -133,13 +85,11 @@
     grid-area: user;
     justify-self: stretch;
     align-self: center;
-    
 }
 .chat_content
 {
     grid-area: content;
     justify-self: start;
-    width: 95%;
 }
 
 /*
@@ -160,16 +110,14 @@
     border-color: grey;
     padding: 2px;
     margin: 2px;
-    height: 50px; 
-    
 
 }
 #chat_form
 {
     display: grid;
-    grid-template-columns: 
+    grid-template-columns:
         1fr
-        100px 
+        100px
     ;
 
     grid-template-areas:
@@ -188,11 +136,9 @@
     grid-area: send_but;
 }
 
-canvas 
+canvas
 {
     background: white;
-    height: 450px;
-    width: 600px;
 }
 
 

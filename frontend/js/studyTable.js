@@ -80,21 +80,23 @@ document.addEventListener("DOMContentLoaded", function() {
    function clearCanvas() {
       var elem = document.createElement('div');
       elem.innerHTML = `
-      <button class="clear">Clear</button>
+      <button class="clear btn btn-danger mr-2">Clear</button>
       `;
       elem.querySelector('.clear').addEventListener('click', function() {
          context.clearRect(0, 0, canvas.width, canvas.height);
          socket.emit('clear', {});
       });
-      document.getElementById("mid_canvas").append(elem);
+      document.getElementById("bot_canvas").append(elem);
    }
 
    function colors() {
       var elem = document.createElement('div');
       elem.innerHTML = `
-      <button class="red">red</button>
-      <button class="yellow">yellow</button>
-      <button class="blue">blue</button>
+      <div class="btn-group mr-2">
+         <button class="btn btn-info red">red</button>
+         <button class="btn btn-info yellow">yellow</button>
+         <button class="btn btn-info blue">blue</button>
+      </div>
       `;
       elem.querySelector('.red').addEventListener('click', function() {
          mouse.color = '#FB0106FF';
@@ -105,15 +107,17 @@ document.addEventListener("DOMContentLoaded", function() {
       elem.querySelector('.blue').addEventListener('click', function() {
          mouse.color = '#0000FEFF';
       });
-      document.getElementById("mid_canvas").append(elem);
+      document.getElementById("bot_canvas").append(elem);
    }
 
    function size() {
       var elem = document.createElement('div');
       elem.innerHTML = `
-      <button class="small">small</button>
-      <button class="medium">medium</button>
-      <button class="large">large</button>
+      <div class="btn-group mr-2" role="group">
+         <button class="btn btn-info small">small</button>
+         <button class="medium btn btn-info">medium</button>
+         <button class="large btn btn-info">large</button>
+      </div>
       `;
       elem.querySelector('.small').addEventListener('click', function() {
          mouse.lineWidth = 1;
@@ -124,31 +128,31 @@ document.addEventListener("DOMContentLoaded", function() {
       elem.querySelector('.large').addEventListener('click', function() {
          mouse.lineWidth = 10;
       });
-      document.getElementById("mid_canvas").append(elem);
+      document.getElementById("bot_canvas").append(elem);
    }
 
    function eraser() {
       var elem = document.createElement('div');
       elem.innerHTML = `
-      <button class="eraser">eraser</button>
+      <button class="eraser btn btn-default mr-2">eraser</button>
       `;
       elem.querySelector('.eraser').addEventListener('click', function() {
          mouse.color = 'white';
       });
-      document.getElementById("mid_canvas").append(elem);
+      document.getElementById("bot_canvas").append(elem);
    }
 
    function save() {
       var elem = document.createElement('div');
       elem.innerHTML = `
-      <button class="save">save</button>
+      <button class="save btn btn-success mr-2">save</button>
       `;
       elem.querySelector('.save').addEventListener('click', function() {
          api.saveCanvas(function(err) {
             if (err) console.error(err);
          });
       });
-      document.getElementById("mid_canvas").append(elem);
+      document.getElementById("bot_canvas").append(elem);
    }
 
    mainLoop();
