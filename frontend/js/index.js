@@ -5,8 +5,6 @@
     window.onload = function()
     {
 
-
-        
         const usr_cont = document.getElementById('user_control');
         const signin = document.getElementById('log_in');
         const signup = document.getElementById('sign_up');
@@ -205,9 +203,9 @@
 
 
         //Change password / Edit Profile
-        parent_div = document.getElementById('profile_edit');
-        msg_div = parent_div.getElementsByClassName("profile_msg")[0];
-        form_sign_up = parent_div.getElementsByTagName("form")[0];
+        let parent_div = document.getElementById('profile_edit');
+        let msg_div = parent_div.getElementsByClassName("profile_msg")[0];
+        let form_sign_up = parent_div.getElementsByTagName("form")[0];
 
         form_sign_up.addEventListener('submit', function(e)
         {
