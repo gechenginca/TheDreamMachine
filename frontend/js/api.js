@@ -1,6 +1,9 @@
 var api = (function() {
     var module = {};
 
+    // Standart AJAX sent requests.
+
+    /*
     function sendFiles(method, url, data, callback) {
         var formdata = new FormData();
         Object.keys(data).forEach(function(key) {
@@ -15,6 +18,7 @@ var api = (function() {
         xhr.open(method, url, true);
         xhr.send(formdata);
     }
+    */
 
     function send(method, url, data, callback) {
         var xhr = new XMLHttpRequest();
@@ -66,6 +70,8 @@ var api = (function() {
         return username;
     };
 
+    // Signup
+    // Only use username and pass
     module.signup = function(auth, callback) {
         send("POST", "/signup/",
             auth, 
@@ -73,7 +79,8 @@ var api = (function() {
         
     };
     
-    // Sign in, sets user session
+    // Sign in
+    // Sets user session and username in cookies
     module.signin = function(username, password, callback) {
         send("POST", "/signin/", { username: username, password: password }, callback);
     };
@@ -81,14 +88,17 @@ var api = (function() {
         send("POST", "/signin/", auth, callback);
     };
 
+    // Sign out, reset session and remove user cookie
     module.signout = function(callback) {
         send("GET", "/signout/", null, callback);
     };
 
     // TODO do we need this?
+    /*
     module.getUsernames = function(callback) {
         send("GET", "/api/users/", null, callback);
     };
+    */
 
     // Get user metadata
     module.getUser = function(username, callback) {
@@ -101,11 +111,13 @@ var api = (function() {
         send("PATCH", "/api/users/" + username + "/", UserProfile, callback);
     };
     */
-    // Update password for user TODO should it be post?
+
+    // Update password for user
     module.updatePass = function(auth, callback) {
         send("PATCH", "/signup/", auth, callback);
     };
 
+    // Add study table
     // tableProfile potencially contains studyTableName, course, location, type, priOrPub, description, members, meetingTimes, meetingTopics
     module.addStudyTable = function(tableProfile, callback) {
         send("POST", "/api/studyTables/", tableProfile, callback);
@@ -113,7 +125,7 @@ var api = (function() {
 
     //TODO add offset, (have buttons for next and previous find)
 
-    // Get ALL (TODO maybe dangerous)
+    // Get all tables ids
     module.getStudyTables = function(callback) {
         send("GET", "/api/studyTables/", null, callback);
     };

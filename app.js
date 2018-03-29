@@ -6,6 +6,7 @@ const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,9 +16,10 @@ app.use(session({
     secret: crypto.randomBytes(64).toString('base64'),
     resave: false,
     saveUninitialized: true,
-    // cookie: { httpOnly: true, secure: true, sameSite: true }
+    // cookie: { httpOnly: true, secure: true, sameSite: true } TODO
 }));
 
+// Session has username.
 app.use(function(req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
     // res.setHeader('Set-Cookie', cookie.serialize('username', req.username, {
@@ -33,12 +35,15 @@ app.use(function(req, res, next) {
 app.use(express.static('frontend'));
 
 const server = require('http').createServer(app);
-let PORT = process.env.PORT || 3000;
-const socketIo = require('socket.io');
+const PORT = process.env.PORT || 3000;
+
+const socketIo = require('socket.io'); //(server)
+
 let tableId;
 let line_history = [];
 
 const io = socketIo.listen(server);
+
 server.listen(PORT, function(err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
@@ -68,7 +73,7 @@ connection.once('open', function() {
     let Canvas = require('./models/canvasModel.js');
 
     const is_Authenticated = function(req, res, next) {
-        if (!req.username) return res.status(401).end('access denied, please login');
+        if (!req.username) return res.status(401).end("access denied, please login");
         next();
     };
 
@@ -78,16 +83,16 @@ connection.once('open', function() {
         if (!('password' in req.body)) return res.status(400).end('password is missing');
         // TODO created a seperation in databases between user password pair and profile
         // Need to create row in profile database in future.
-        const username = req.body.username;
-        const password = req.body.password;
-        const salt = generateSalt();
+        let username = req.body.username;
+        let password = req.body.password;
+        let salt = generateSalt();
         User.findOne({ _id: username }, function(err, user) {
             if (err) return res.status(500).end(err);
             if (user) return res.status(409).end("username " + username + " already exists");
-            const salt = generateSalt();
-            const hash = generateHash(password, salt);
+            let salt = generateSalt();
+            let hash = generateHash(password, salt);
             // create new user
-            const newUser = new User({_id: username, hash: hash, salt: salt});
+            let newUser = new User({_id: username, hash: hash, salt: salt});
             // save new user
             newUser.save(function (err, newUser) {
                 if (err) return console.error(err);
@@ -107,8 +112,8 @@ connection.once('open', function() {
     app.post('/signin/', function(req, res, next) {
         if (!('username' in req.body)) return res.status(400).end('username is missing');
         if (!('password' in req.body)) return res.status(400).end('password is missing');
-        const username = req.body.username;
-        const password = req.body.password;
+        let username = req.body.username;
+        let password = req.body.password;
         // retrieve user from the database
         User.findOne({ _id: username }, function(err, user) {
             if (err) return res.status(500).end(err);
@@ -142,7 +147,7 @@ connection.once('open', function() {
     // get all usernames
     // curl -b cookie.txt localhost:3000/api/users/
     app.get('/api/users/', is_Authenticated, function(req, res, next) {
-        const usernames = [];
+        let usernames = [];
         User.find({}).sort({ createdAt: 1 }).exec(function(err, allUsers) {
             if (err) return res.status(500).end(err);
             if (allUsers != null) {
@@ -157,6 +162,8 @@ connection.once('open', function() {
     //TODO should not be returning hash or salt, should be returning profile info ONLY!
     // get an user
     // curl -b cookie.txt localhost:3000/api/users/alice
+
+    /*
     app.get('/api/users/:username/', is_Authenticated, function(req, res, next) {
         User.findOne({ _id: req.params.username }, function(err, user) {
             if (err) return res.status(500).end(err);
@@ -166,18 +173,21 @@ connection.once('open', function() {
             }
         });
     });
+    */
 
-    // update an user's password
+    
 
     // Example for updating profile TODO
     // curl -H "Content-Type: application/json" -X PATCH -d '{"yearOfStudy":"3","program":"cs","currentCourses":["cSCC09", "CSCC01"],"finishedCourses":["CSCC01", "CSCB09"],"school":"uoft"}' -b cookie.txt localhost:3000/api/users/alice
+
+    // update an user's password
     app.patch('/signup/', is_Authenticated, function(req, res, next) {
         if (req.session.username != req.body.username) return res.status(401).end('access denied, you are not the owner');
         //User.findOneAndUpdate({ _id: req.params.username }, {yearOfStudy: req.body.yearOfStudy, program: req.body.program, currentCourses: req.body.currentCourses, finishedCourses: req.body.finishedCourses, school: req.body.school}, {new: true}, function(err, user) {
 
-        const username = req.session.username;
-        const password = req.body.password;
-        const salt = generateSalt();
+        let username = req.session.username;
+        let password = req.body.password;
+        let salt = generateSalt();
 
         User.findOneAndUpdate({ _id: username }, {hash: hash, salt: salt}, {new: true}, function(err, user) {
             if (err) return res.status(500).end(err);
@@ -192,28 +202,40 @@ connection.once('open', function() {
     // study table CRUD
 
     // add a study table
+    // TODO set owner
     // curl -H "Content-Type: application/json" -X POST -d '{"studyTableName":"C09","owner":"alice", "course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/
     app.post('/api/studyTables/', is_Authenticated, function(req, res, next) {
-        const studyTableName = req.body.studyTableName;
+        let studyTableName = req.body.studyTableName;
         StudyTable.findOne({ _id: studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable) return res.status(409).end("study table " + studyTableName + " already exists");
-            // check if owner exists
-            User.findOne({ _id: req.body.owner }, function(err, user) {
-                if (err) return res.status(500).end(err);
-                // if (user == null) return res.status(404).end('user ' + req.params.owner + ' does not exist, failed to create this study table');
-                // create new study table
-                const newStudyTable = new StudyTable({_id: studyTableName, owner: req.username, course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
-                // save new study table
-                newStudyTable.save(function(err, newStudyTable) {
-                    if (err) return console.error(err);
-                    return res.json(newStudyTable);
-                });
+            // set owner to session username  
+            let newStudyTable = new StudyTable({
+                    _id: studyTableName, 
+                    owner: req.session.username, 
+                    course: req.body.course, 
+                    location: req.body.location, 
+                    type: req.body.type, 
+                    priOrPub: req.body.priOrPub, 
+                    description: req.body.description, 
+                    members: req.body.members, 
+                    meetingTimes: req.body.meetingTimes, 
+                    meetingTopics: req.body.meetingTopics
+                    });
+
+            // save new study table todb
+            newStudyTable.save(function(err, newStudyTable) {
+                if (err)
+                {
+                    console.error(err);
+                    return res.status(500).end(err);
+                }
+                return res.json(newStudyTable);
             });
         });
     });
 
-    // get all study tables
+    // get all study tables ids
     // curl -b cookie.txt localhost:3000/api/studyTables/
     // app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
     app.get('/api/studyTables/', is_Authenticated, function(req, res, next) {
@@ -224,12 +246,13 @@ connection.once('open', function() {
                 for (let i = 0; i < allStudyTables.length; i++) {
                     studyTables.push(allStudyTables[i]._id);
                 }
-                return res.json(studyTables);
             }
+            return res.json(studyTables);
+
         });
     });
 
-    // get a study table
+    // get a study table object
     // curl -b cookie.txt localhost:3000/api/studyTables/C09
     app.get('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
@@ -240,13 +263,27 @@ connection.once('open', function() {
     });
 
     // update a study table
+    // Must be the owner, match session id
     // curl -H "Content-Type: application/json" -X PATCH -d '{"course":"C09","location":"uoft","type":"discussion","priOrPub":"public","description":"c09 awesome","members":["alice"],"meetingTimes":["Friday 1-3pm"],"meetingTopics":["c09 project"]}' -b cookie.txt localhost:3000/api/studyTables/C09
     app.patch('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
-            if (studyTable.owner != req.username) return res.status(401).end('access denied, you are not the owner');
-            studyTable.set({course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+            if (studyTable.owner != req.session.username) return res.status(401).end('access denied, you are not the owner');
+
+            let updatedStudyTable = studyTable;
+            //studyTable.set({course: req.body.course, location: req.body.location, type: req.body.type, priOrPub: req.body.priOrPub, description: req.body.description, members: req.body.members, meetingTimes: req.body.meetingTimes, meetingTopics: req.body.meetingTopics});
+
+            // Cannot update owner, yet TODO
+            updatedStudyTable.course = req.body.course;
+            updatedStudyTable.location = req.body.location;
+            updatedStudyTable.type = req.body.type;
+            updatedStudyTable.priOrPub = req.body.priOrPub;
+            updatedStudyTable.description = req.body.description;
+            updatedStudyTable.members = req.body.members;
+            updatedStudyTable.meetingTimes = req.body.meetingTimes;
+            updatedStudyTable.meetingTopics = req.body.meetingTopics;
+
             studyTable.save(function(err, updatedStudyTable) {
                 if (err) return console.error(err);
                 return res.json(updatedStudyTable);
@@ -254,19 +291,22 @@ connection.once('open', function() {
         });
     });
 
-    // remove a study table
+    // Remove a study table
     // curl -b cookie.txt -X DELETE localhost:3000/api/studyTables/C09
     app.delete('/api/studyTables/:studyTableName/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.studyTableName }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable == null) return res.status(404).end('study table ' + req.params.studyTableName + ' does not exist');
-            if (studyTable.owner != req.username) return res.status(401).end('access denied, you are not the owner');
+            if (studyTable.owner != req.session.username) return res.status(401).end('access denied, you are not the owner');
             studyTable.remove(function(err) {
                 if (err) return console.error(err);
                 return res.json('study table ' + studyTable._id + ' has removed');
             });
         });
     });
+
+
+    // Canvas CRUD and socket io
 
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
@@ -308,7 +348,17 @@ connection.once('open', function() {
         line_history = data;
     }
 
+    
+    //TODO authentication???
     io.on('connection', function(socket) {
+//        socket.request.session.username
+        //Is connection valid? What does socket contain?
+        
+        console.log(socket.id);
+        console.log(socket.request);
+        console.log(socket.handshake.headers);
+
+
         for (let i in line_history) {
             socket.emit('draw_line', { line: line_history[i] });
         }

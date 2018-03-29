@@ -4,18 +4,22 @@
 
     window.onload = function()
     {
+
+
+        
+        const usr_cont = document.getElementById('user_control');
+        const signin = document.getElementById('log_in');
+        const signup = document.getElementById('sign_up');
+        const prof_edit = document.getElementById('profile_edit');
+        const gr_add = document.getElementById('group_add');
+        const srch_box = document.getElementById('search_box');
+        const srch_res = document.getElementById('search_results');
+
         // Depending if logged in or not will show correct
         // items. Will also reset divs that were shown by other operations.
         var update_front_page = function()
         {
 
-            var usr_cont = document.getElementById('user_control');
-            var signin = document.getElementById('log_in');
-            var signup = document.getElementById('sign_up');
-            var prof_edit = document.getElementById('profile_edit');
-            var gr_add = document.getElementById('group_add');
-            var srch_box = document.getElementById('search_box');
-            var srch_res = document.getElementById('search_results');
 
             //All index sections
             var all_div = document.getElementsByClassName("index_section");
@@ -67,17 +71,22 @@
         update_front_page();
 
         //sign up
-        var parent_div = document.getElementById('sign_up');
-        var msg_div = parent_div.getElementsByClassName("profile_msg")[0];
-        var form_sign_up = parent_div.getElementsByTagName("form")[0];
-
-        form_sign_up.addEventListener('submit', function(e)
+          
+    
+        signup.getElementsByTagName("form")[0].addEventListener('submit', function(e)
         {
             // prevent from refreshing the page on submit
-            e.preventDefault();
-            var user_name = parent_div.getElementsByClassName("profile_user")[0].value;
-            var password = parent_div.getElementsByClassName("profile_pass")[0].value;
-            var password2 = parent_div.getElementsByClassName("profile_pass")[1].value;
+            e.preventDefault();  
+            
+            let parent_div = signup;
+            let msg_div = parent_div.getElementsByClassName("profile_msg")[0];
+            let form_sign_up = parent_div.getElementsByTagName("form")[0];
+        
+            
+            let user_name = form_sign_up.getElementsByClassName("profile_user")[0].value;
+            let real_name = form_sign_up.getElementsByClassName("profile_name")[0].value;
+            let password = form_sign_up.getElementsByClassName("profile_pass")[0].value;
+            let password2 = form_sign_up.getElementsByClassName("profile_pass")[1].value;
             // clean form
             form_sign_up.reset();
 
@@ -313,6 +322,7 @@
         var create_table_form = function(table) {
             var element = document.createElement("div");
             element.className = "table_item";
+            //TODO, if owner, then show delete button
             element.innerHTML += `
                 <div class="table_par">
                     <span class="table_label">Name:</span>
