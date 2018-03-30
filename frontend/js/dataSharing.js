@@ -1,8 +1,8 @@
 var line_history;
 
 window.onload = function() {
-    // var peer = new Peer( { host: "localhost", port: 3000, path: '/peer' });
-    var peer = new Peer( { host: "https://onlinestudytable2018.herokuapp.com/", path: '/peer' });
+    var peer = new Peer( { host: "https://immense-oasis-76652.herokuapp.com/", path: '/peer' });
+    // var peer = new Peer( { host: "https://onlinestudytable2018.herokuapp.com/", path: '/peer' });
     socket = io();
     peer.on('connection', function(conn) {
         conn.on('data', function(data) {
