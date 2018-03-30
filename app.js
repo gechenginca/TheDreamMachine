@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const app = express();
+ExpressPeerServer = require('peer').ExpressPeerServer;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -37,6 +38,8 @@ let PORT = process.env.PORT || 3000;
 const socketIo = require('socket.io');
 let tableId;
 let line_history = [];
+
+app.use('/peer', ExpressPeerServer(server, {}));
 
 const io = socketIo.listen(server);
 server.listen(PORT, function(err) {
@@ -268,6 +271,11 @@ connection.once('open', function() {
         });
     });
 
+    app.get('/api/canvas/data/', is_Authenticated, function(req, res, next) {
+        return res.json(line_history);
+        // return res.json(null);
+    })
+
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
@@ -288,11 +296,12 @@ connection.once('open', function() {
         });
     });
 
-    app.get('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
+    app.patch('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
         Canvas.findOne({ tableId: tableId }, function(err, canvas) {
             if (err) return console.error(err);
             if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
-            canvas.data = line_history;
+            setLineHistory(req.body.line_history);
+            canvas.data = req.body.line_history;
             canvas.save(function(err, updatedCanvas) {
                 if (err) return console.error(err);
             });
@@ -308,20 +317,29 @@ connection.once('open', function() {
         line_history = data;
     }
 
+    var ids = [];
     io.on('connection', function(socket) {
-        for (let i in line_history) {
-            socket.emit('draw_line', { line: line_history[i] });
-        }
+        // console.log('client connected');
+/*----------------------------webRTC Begin---------------------------------------*/
+        socket.on('clientid', function(id) {
+            ids.push(id);
+            socket.broadcast.emit('clientid', ids);
+        })
+/*----------------------------webRTC End---------------------------------------*/
 
-        socket.on('draw_line', function(data) {
-            line_history.push(data.line);
-            io.emit('draw_line', { line: data.line });
-        });
+        // for (let i in line_history) {
+        //     socket.emit('draw_line', { line: line_history[i] });
+        // }
 
-        socket.on('clear', function(data) {
-            line_history = [];
-            io.emit('clear', {});
-        });
+        // socket.on('draw_line', function(data) {
+        //     line_history.push(data.line);
+        //     io.emit('draw_line', { line: data.line });
+        // });
+
+        // socket.on('clear', function(data) {
+        //     line_history = [];
+        //     io.emit('clear', {});
+        // });
     });
 
 });
