@@ -341,7 +341,7 @@
                     <span class="table_loc">${table.location}</span>
                 </div>
                     <div class="table_controls">
-                    <button class="control"><a href="/api/canvas/${table._id}/">Enter</a></button>
+                    <button class="control">/*<a href="/api/canvas/${table._id}/">*/<a>Enter</a></button>
                 `;
                 if (api.getCurrentUser() == table.owner) {
                     element.innerHTML += `
@@ -349,7 +349,22 @@
                     <button class="control delete_button">delete</button>
                     `
                 };
-            if (api.getCurrentUser() == table.owner) {
+                
+                // ENTER BUTTON
+                let enter_but = element.querySelector('.control');
+                enter_but.addEventListener('click', function()
+                {
+                    api.enterStudyTable(table._id, function(err, msg)
+                        if (err == null)
+                        {
+                            let hostname = window.location.hostname;
+                            //Redirect
+                            window.location = hostname + "/studyTable.html";
+                        }
+                    });
+                });
+
+                if (api.getCurrentUser() == table.owner) {
                 element.querySelector('.delete_button').addEventListener('click', function(){
                     api.deleteStudyTable(table._id, function(err, msg) {
                         if (err) console.log(err);

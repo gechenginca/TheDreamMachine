@@ -303,25 +303,52 @@ connection.once('open', function() {
             if (studyTable.owner != req.session.username) return res.status(401).end('access denied, you are not the owner');
             studyTable.remove(function(err) {
                 if (err) return console.error(err);
-                return res.json('study table ' + studyTable._id + ' has removed');
+                return res.json('study table ' + studyTable._id + ' has been removed');
             });
         });
     });
 
+    //TODO
     app.get('/api/canvas/data/', is_Authenticated, function(req, res, next) {
         return res.json(line_history);
         // return res.json(null);
     })
 
 
-    // Canvas CRUD and socket io
+    var activeCanvases {};
+    /*
+        key-table_id: line_history
+    */
 
+    var activeTablePeers {};
+    /*
+        key-table_id: [ids]
+    */
+
+    var activeTableUsers = {};
+    /*
+        key-token: {table_id: tbl, username: user}
+    */
+    // Canvas CRUD and socket io
 
     app.get('/api/canvas/:tableId/', is_Authenticated, function(req, res, next) {
         StudyTable.findOne({ _id: req.params.tableId }, function(err, studyTable) {
             if (err) return res.status(500).end(err);
             if (studyTable == null) return res.status(404).end('study table ' + req.params.tableId + ' does not exist');
+
+            // Set token to use later.
+            let table_token = crypto.randomBytes(64).toString('base64');
+            res.setHeader('Set-Cookie', cookie.serialize('table_token', table_token, {
+                path: '/',
+                maxAge: 60 * 60 * 24
+            }));
+            
+            let activeTableUser = {table_id: req.params.tableId, username: req.session.username};
+            activeTableUsers[table_token] = activeTableUser;
+
+            //OLD TODO remove
             saveTableId(req.params.tableId);
+
             Canvas.findOne({ tableId: req.params.tableId }, function(err, existedCanvas) {
                 if (err) return res.status(500).end(err);
                 if (existedCanvas == null) {
@@ -330,21 +357,37 @@ connection.once('open', function() {
                         if (err) return console.error(err);
                     });
                 } else {
+
+                    activeCanvases[req.params.tableId] = existedCanvas.data;
+                    // OLD TODO remove
                     setLineHistory(existedCanvas.data);
-                    res.redirect('/studyTable.html');
+
+                    //res.redirect('/studyTable.html');
                 }
+                res.json(table_token);
             });
         });
     });
 
     app.patch('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
-        Canvas.findOne({ tableId: tableId }, function(err, canvas) {
+        let table_tok = cookie.parse(socket.handshake.headers.cookie).table_token;
+
+        let active_t = activeTableUsers[table_tok];
+        if (active_t == null || active_t == undefined)
+        {
+            return res.status(400).end("No table token");
+        }
+
+        let my_table_id = active_t.table_id;
+        
+        Canvas.findOne({ tableId: my_tableId }, function(err, canvas) {
             if (err) return console.error(err);
-            if (canvas == null) return console.error('canvas under table id ' + tableId + ' does not exist');
+            if (canvas == null) return res.status(400).end('canvas under table id ' + tableId + ' does not exist');
+            activeCanvases[my_tableId] = req.body.line_history;
             setLineHistory(req.body.line_history);
             canvas.data = req.body.line_history;
             canvas.save(function(err, updatedCanvas) {
-                if (err) return console.error(err);
+                if (err) return res.status(400).end(err);
             });
             return res.json("");
         });
@@ -358,12 +401,37 @@ connection.once('open', function() {
         line_history = data;
     }
 
-    var ids = [];
+    //var ids = [];
     io.on('connection', function(socket) {
+
+        // Need to check if authenticated (Cannot easily do that)
+        // Need to check if table id matches with token, does token exists
+        // Set table id
+
+        let table_tok = cookie.parse(socket.handshake.headers.cookie).table_token;
+
+        let active_t = activeTableUsers[table_tok];
+        if (active_t == null || active_t == undefined)
+        {
+            socket.disconnect(0);
+            return;
+        }
+        else
+        {
+
+        let my_table_id = active_t.table_id;
+        
         // console.log('client connected');
 /*----------------------------webRTC Begin---------------------------------------*/
         socket.on('clientid', function(id) {
+            //activeTablePeers[table_id].push(id);
+            let ids = activeTablePeers[table_id];
+            if (ids == null || ids_t == undefined)
+            {
+                ids =[];
+            }
             ids.push(id);
+            activeTablePeers[table_id] = ids;
             socket.broadcast.emit('clientid', ids);
         })
 /*----------------------------webRTC End---------------------------------------*/
@@ -381,7 +449,7 @@ connection.once('open', function() {
         //     line_history = [];
         //     io.emit('clear', {});
         // });
-
+        }
     });
 
 });

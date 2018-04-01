@@ -9,8 +9,14 @@
 var line_history = [];
 
 window.onload = function() {
-    // var peer = new Peer({ host: "localhost", port: 3000, path: '/peer' });
-    var peer = new Peer({ host: "onlinestudytable2018.herokuapp.com", port: 443, path: '/peer' });
+    if (window.location.hostname == "localhost")
+    {
+        var peer = new Peer({ host: "localhost", port: 3000, path: '/peer' });
+    }
+    else
+    {
+        var peer = new Peer({ host: "onlinestudytable2018.herokuapp.com", port: 443, path: '/peer' });
+    }
     var conns = [];
     var connIds = {};
     var context;
@@ -28,6 +34,7 @@ window.onload = function() {
         });
     });
     peer.on('open', function(id) {
+        // Load canvas from server...
         api.getCanvas(function(err, data) {
             setLineHistory(data);
             if (data) {

@@ -158,13 +158,23 @@ var api = (function() {
 
     // TODO post to group chat
     
+    // Save canvas data to server
     module.saveCanvas = function(data, callback) {
         send("PATCH", "/api/saveCanvas/", {line_history: data}, callback);
     };
-
+    
+    // Retrieve canvas from server
     module.getCanvas = function(callback) {
         send("GET", "/api/canvas/data/", null, callback);
     };
+
+    //Set table cookies token
+    module.enterStudyTable = function(table_id, callback)
+    {
+        send("GET", "/api/canvas/" + table_id + "/", null, callback);
+
+    };
+
 
     return module;
 })();
