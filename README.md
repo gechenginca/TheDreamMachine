@@ -1,5 +1,7 @@
 # TheDreamMachine
 
+You can find the live version of the app here: https://onlinestudytable2018.herokuapp.com/
+
 ## Table of Contents
 
 1. [Project Title](#project_title)
