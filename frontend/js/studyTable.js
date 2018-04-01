@@ -83,17 +83,35 @@ window.onload = function() {
     canvas.width = width;
     canvas.height = height;
 
-    // register mouse event handlers
-    canvas.onmousedown = function(e) { mouse.click = true; };
-    canvas.onmouseup = function(e) { mouse.click = false; };
-    canvas.onmouseleave = function(e) { mouse.click = false; };
 
-    canvas.onmousemove = function(e) {
+    let downfc =  function(e) { mouse.click = true; };
+    let upfc = function(e) { mouse.click = false; };
+    let leavefc =  function(e) { mouse.click = false; };
+    let movefc = function(e) {
         // normalize mouse position to range 0.0 - 1.0
         mouse.pos.x = (e.pageX - canvas.offsetLeft) / width;
         mouse.pos.y = (e.pageY - canvas.offsetTop) / height;
         mouse.move = true;
     };
+    // For touch
+    let movefc2 = function(e) {
+        // normalize mouse position to range 0.0 - 1.0
+        mouse.pos.x = (e.touches[0].clientX - canvas.offsetLeft) / width;
+        mouse.pos.y = (e.touches[0].clientY - canvas.offsetTop) / height;
+        mouse.move = true;
+    };
+    
+    // register mouse event handlers
+    canvas.onmousedown = downfc;
+    canvas.onmouseup = upfc;
+    canvas.onmouseleave = leavefc;
+    canvas.onmousemove = movefc;
+
+    //TOUCH events for mobile
+    canvas.addEventListener("touchstart", downfc, false);
+    canvas.addEventListener("touchend", upfc, false);
+    canvas.addEventListener("touchcancel", leavefc, false);
+    canvas.addEventListener("touchmove", movefc2, false);
 
     socket.on('connect', function() {
         // console.log('connected to server');
