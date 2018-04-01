@@ -64,7 +64,20 @@ var api = (function() {
 
     // Get user from cookies. 
     module.getCurrentUser = function(){
-        var username = document.cookie.split("username=")[1];
+        let cookies = document.cookie.split(";");
+        let username = "";
+        let i = 0;
+        for (i = 0; i < cookies.length; i++)
+        {
+            cookies[i] = cookies[i].trim();
+            if (cookies[i].startsWith("username="))
+            {
+                username = cookies[i].split("username=")[1];
+            }
+        
+        }
+        
+        
         if (username == undefined) return null;
         if (username.length == 0) return null;
         return username;

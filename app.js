@@ -5,9 +5,10 @@ const mongoose = require('mongoose');
 const cookie = require('cookie');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-
+const cookieParser = require('cookie-parser') 
 
 const app = express();
+app.use(cookieParser());
 ExpressPeerServer = require('peer').ExpressPeerServer;
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -315,15 +316,17 @@ connection.once('open', function() {
     })
 
 
-    var activeCanvases {};
+    var activeCanvases = {};
     /*
         key-table_id: line_history
     */
 
-    var activeTablePeers {};
+    var activeTablePeers = {};
     /*
         key-table_id: [ids]
     */
+
+    var ids_to_socket = {};
 
     var activeTableUsers = {};
     /*
@@ -370,7 +373,8 @@ connection.once('open', function() {
     });
 
     app.patch('/api/saveCanvas/', is_Authenticated, function(req, res, next) {
-        let table_tok = cookie.parse(socket.handshake.headers.cookie).table_token;
+        console.log(req.cookies);
+        let table_tok = req.cookies.table_token;
 
         let active_t = activeTableUsers[table_tok];
         if (active_t == null || active_t == undefined)
@@ -380,10 +384,10 @@ connection.once('open', function() {
 
         let my_table_id = active_t.table_id;
         
-        Canvas.findOne({ tableId: my_tableId }, function(err, canvas) {
+        Canvas.findOne({ tableId: my_table_id }, function(err, canvas) {
             if (err) return console.error(err);
             if (canvas == null) return res.status(400).end('canvas under table id ' + tableId + ' does not exist');
-            activeCanvases[my_tableId] = req.body.line_history;
+            activeCanvases[my_table_id] = req.body.line_history;
             setLineHistory(req.body.line_history);
             canvas.data = req.body.line_history;
             canvas.save(function(err, updatedCanvas) {
@@ -420,19 +424,38 @@ connection.once('open', function() {
         {
 
         let my_table_id = active_t.table_id;
+        let my_user = active_t.username;
+        //console.log("I am " + my_user + " connected to table " + my_table_id);
+        socket.join(my_table_id);
         
         // console.log('client connected');
 /*----------------------------webRTC Begin---------------------------------------*/
         socket.on('clientid', function(id) {
             //activeTablePeers[table_id].push(id);
-            let ids = activeTablePeers[table_id];
-            if (ids == null || ids_t == undefined)
+            let ids = activeTablePeers[my_table_id];
+            if (ids == null || ids == undefined)
             {
                 ids =[];
             }
             ids.push(id);
-            activeTablePeers[table_id] = ids;
-            socket.broadcast.emit('clientid', ids);
+            activeTablePeers[my_table_id] = ids;
+
+            /*
+            ids_to_socket[id] = socket;
+            console.log();
+            */
+            //console.log("I am " + my_user + " connected to table " + my_table_id + "Getting peer ids: " + ids);
+            /*
+            let c_sock = 0;
+            for (c_sock = 0; c_sock < ids.length; c_sock++)
+            {
+                ids_to_socket[ids[c_sock]].emit('clientid', ids);
+            }
+            */
+            
+
+            //socket.broadcast.emit('clientid', ids);
+            socket.to(my_table_id).emit('clientid', ids);
         })
 /*----------------------------webRTC End---------------------------------------*/
 

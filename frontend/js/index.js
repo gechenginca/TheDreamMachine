@@ -341,7 +341,7 @@
                     <span class="table_loc">${table.location}</span>
                 </div>
                     <div class="table_controls">
-                    <button class="control">/*<a href="/api/canvas/${table._id}/">*/<a>Enter</a></button>
+                    <button class="control"><a>Enter</a></button>
                 `;
                 if (api.getCurrentUser() == table.owner) {
                     element.innerHTML += `
@@ -355,11 +355,12 @@
                 enter_but.addEventListener('click', function()
                 {
                     api.enterStudyTable(table._id, function(err, msg)
+                    {
                         if (err == null)
                         {
                             let hostname = window.location.hostname;
                             //Redirect
-                            window.location = hostname + "/studyTable.html";
+                            window.location = "/studyTable.html";
                         }
                     });
                 });
