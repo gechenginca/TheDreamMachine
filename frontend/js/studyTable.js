@@ -148,7 +148,8 @@ window.onload = function() {
     function mainLoop() {
         // check if the user is drawing
         if (mouse.click && mouse.move && mouse.pos_prev) {
-            data = { line: [mouse.pos, mouse.pos_prev, mouse.color, mouse.lineWidth] };
+            let mouse_pos_copy = {x: mouse.pos.x, y: mouse.pos.y };
+            data = { line: [mouse_pos_copy, mouse.pos_prev, mouse.color, mouse.lineWidth] };
             // send line to to the server
             // socket.emit('draw_line', { line: [mouse.pos, mouse.pos_prev, mouse.color, mouse.lineWidth] });
             conns.forEach((conn) => {
