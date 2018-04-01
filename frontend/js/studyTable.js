@@ -29,6 +29,7 @@ window.onload = function() {
             }
             else if (context) {
                 draw(data);
+                line_history.push(data.line);
             }
 
         });
