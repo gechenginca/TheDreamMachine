@@ -4,7 +4,7 @@ You can find the live version of the app here: https://onlinestudytable2018.hero
 
 You can find the video showcasing the project here: https://www.youtube.com/watch?v=GvSRTNQys9E&
 
-You can find the api documentation of the project in this [link](./API).
+You can find the api documentation of the project in this [link](https://github.com/UTSCC09/TheDreamMachine/blob/master/API.md).
 ## Table of Contents
 
 1. [Project Title](#project_title)
