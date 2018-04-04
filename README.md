@@ -2,6 +2,8 @@
 
 You can find the live version of the app here: https://onlinestudytable2018.herokuapp.com/
 
+You can find the video showcasing the project here: https://www.youtube.com/watch?v=GvSRTNQys9E&
+
 ## Table of Contents
 
 1. [Project Title](#project_title)
